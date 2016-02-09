@@ -5,7 +5,7 @@
   "repository": "git@github.com:keithmorris/node-dotenv-extended.git",
   "main": "lib/index.js",
   "scripts": {
-    "test": "gulp unittest",
+    "test": "./node_modules/.bin/gulp unittest",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "lint": "gulp lint"
   },
