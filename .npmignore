@@ -1,0 +1,9 @@
+coverage
+node_modules
+src
+test
+.editorconfig
+.eslintrc
+.gitignore
+.travis.yml
+gulpfile.js
