@@ -44,7 +44,7 @@ gulp.task('mocha', [], function () {
         });
 });
 
-gulp.task('unittest', [], function (callback) {
+gulp.task('unittest', ['build'], function (callback) {
     gulp.src([
             'lib/**/*.js'
         ])
@@ -78,5 +78,5 @@ gulp.task('babel', [], function () {
 });
 
 gulp.task('build', [], function (callback) {
-    runSequence('clean', 'lint', 'babel', 'unittest', callback);
+    runSequence('clean', 'lint', 'babel', callback);
 });
