@@ -1,13 +1,14 @@
 {
   "name": "dotenv-extended",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A module for loading .env files and optionally loading defaults and a schema for validating all values are present.",
   "repository": "git@github.com:keithmorris/node-dotenv-extended.git",
   "main": "lib/index.js",
   "scripts": {
     "test": "./node_modules/.bin/gulp unittest",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
-    "lint": "gulp lint"
+    "lint": "gulp lint",
+    "prepublish": "./node_modules/.bin/gulp build"
   },
   "keywords": [
     "dotenv",
