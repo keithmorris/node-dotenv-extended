@@ -1,6 +1,7 @@
 # dotenv-extended
 
 [![Build Status](https://travis-ci.org/keithmorris/node-dotenv-extended.svg?branch=develop)](https://travis-ci.org/keithmorris/node-dotenv-extended)
+[![Coverage Status](https://coveralls.io/repos/github/keithmorris/node-dotenv-extended/badge.svg?branch=develop)](https://coveralls.io/github/keithmorris/node-dotenv-extended?branch=develop)
 
 I've been a big fan of the [dotenv] for a quite some time (in fact, this library uses [dotenv] under the hood for the `.env` file parsing). However, while working on some bigger projects, we realized that the managing of the `.env` files became a bit of a chore. As the files changed in the development environments, it became a tedious manual process to compare and figure out what needed to be added or removed in the other environments.
 
@@ -8,7 +9,7 @@ This library solves some of these issues by introducing the concept of 3 files w
 
 ### `.env`
 
-The environment specific file (not committed to source control). This file will have sensitive information such as usernames, passwords, api keys, etc. These would be specific to each environment and should not be committed to source control. The format is a series of key-value pairs. Any line starting with `#` or `;` are commented out and ignored
+The environment specific file (not committed to source control). This file will have sensitive information such as usernames, passwords, api keys, etc. These would be specific to each environment and should not be committed to source control. The format is a series of key-value pairs. Any line starting with `#` or `;` are commented out and ignored.
 
 ```
 # .env file
