@@ -54,7 +54,7 @@ describe('dotenv-extended tests', function () {
             dotenvex.load({
                 schema: '.env.schema.example',
                 defaults: '.env.defaults.example',
-                environment: '.env.missing',
+                path: '.env.missing',
                 errorOnMissing: true
             });
         };
@@ -66,7 +66,7 @@ describe('dotenv-extended tests', function () {
             dotenvex.load({
                 schema: '.env.schema.example',
                 defaults: '.env.defaults.example',
-                environment: '.env.extra',
+                path: '.env.extra',
                 errorOnExtra: true
             });
         };
@@ -77,7 +77,7 @@ describe('dotenv-extended tests', function () {
         var config = dotenvex.load({
             schema: '.env.schema.example',
             defaults: '.env.defaults.example',
-            environment: '.env.override',
+            path: '.env.override',
             errorOnExtra: true,
             errorOnMissing: true
         });
@@ -93,7 +93,7 @@ describe('dotenv-extended tests', function () {
         var config = dotenvex.load({
             schema: '.env.schema.example',
             defaults: '.env.defaults.example',
-            environment: '.env.override',
+            path: '.env.override',
             errorOnExtra: true,
             errorOnMissing: true,
             assignToProcessEnv: false

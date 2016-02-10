@@ -22,9 +22,9 @@ export const config = options => {
 
     var defaultsData, environmentData,
         defaultOptions = {
-            encoding: 'utf-8',
+            encoding: 'utf8',
             silent: true,
-            environment: '.env',
+            path: '.env',
             defaults: '.env.defaults',
             schema: '.env.schema',
             errorOnMissing: false,
@@ -36,7 +36,7 @@ export const config = options => {
     options = _.assign({}, defaultOptions, options);
 
     defaultsData = loadEnvironmentFile(options.defaults, options.encoding, options.silent);
-    environmentData = loadEnvironmentFile(options.environment, options.encoding, options.silent);
+    environmentData = loadEnvironmentFile(options.path, options.encoding, options.silent);
 
     let configData = _.assign({}, defaultsData, environmentData);
 
