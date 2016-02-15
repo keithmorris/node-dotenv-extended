@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/keithmorris/node-dotenv-extended.svg?branch=develop)](https://travis-ci.org/keithmorris/node-dotenv-extended)
 [![Coverage Status](https://coveralls.io/repos/github/keithmorris/node-dotenv-extended/badge.svg?branch=develop)](https://coveralls.io/github/keithmorris/node-dotenv-extended?branch=develop)
+[![Dependency Status](https://david-dm.org/keithmorris/node-dotenv-extended.svg)](https://david-dm.org/keithmorris/node-dotenv-extended)
+
 
 I've been a big fan of the [dotenv] for a quite some time (in fact, this library uses [dotenv] under the hood for the `.env` file parsing). However, while working on some bigger projects, we realized that the managing of the `.env` files became a bit of a chore. As the files changed in the development environments, it became a tedious manual process to compare and figure out what needed to be added or removed in the other environments.
 
@@ -68,9 +70,9 @@ MONGO_PASS=dbpassword!
 `process.env` now has the keys and values you defined in your `.env` file.
 
 ```javascript
-mongoose.connect('mongodb://' + MONGO_HOST + '/' + MONGO_DATABASE, {
-    user: MONGO_USER,
-    pass: MONGO_PASS
+mongoose.connect('mongodb://' + process.env.MONGO_HOST + '/' + process.env.MONGO_DATABASE, {
+    user: process.env.MONGO_USER,
+    pass: process.env.MONGO_PASS
 });
 ```
 
