@@ -70,9 +70,9 @@ MONGO_PASS=dbpassword!
 `process.env` now has the keys and values you defined in your `.env` file.
 
 ```javascript
-mongoose.connect('mongodb://' + MONGO_HOST + '/' + MONGO_DATABASE, {
-    user: MONGO_USER,
-    pass: MONGO_PASS
+mongoose.connect('mongodb://' + process.env.MONGO_HOST + '/' + process.env.MONGO_DATABASE, {
+    user: process.env.MONGO_USER,
+    pass: process.env.MONGO_PASS
 });
 ```
 
