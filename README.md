@@ -76,6 +76,19 @@ mongoose.connect('mongodb://' + process.env.MONGO_HOST + '/' + process.env.MONGO
 });
 ```
 
+### Load Configs from command line
+
+You may also load the `.env` files from the command line. Add in the require `dotenv-extended/config` along with any of the options that the `load` method takes prefixed with `dotenv_config_`. e.g.:
+```
+node -r dotenv-extended/config your_script.js
+```
+
+Or to specify load options:
+
+```
+node -r dotenv-extended/config your_script.js dotenv_config_path=./env/.env dotenv_config_defaults=./env/.env.defaults
+```
+
 ## Options
 
 Defaults are shown below:
@@ -169,7 +182,7 @@ API_KEY=
 var myConfig = require('dotenv-extended').load();
 
 myConfig.DB_HOST === process.env.DB_HOST === "localhost"
-myConfig.DB_USER === process.env.DB_HOST === "databaseuser-local"
+myConfig.DB_USER === process.env.DB_USER === "databaseuser-local"
 myConfig.DB_PASS === process.env.DB_PASS === "localhost"
 myConfig.DB_DATABASE === process.env.DB_DATABASE === "MyAppDB"
 myConfig.SHARE_URL === process.env.SHARE_URL === "http://www.example.com"
