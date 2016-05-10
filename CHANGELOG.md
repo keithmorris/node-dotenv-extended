@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1 - 2016.05.10
+- Add ability to load .env files from command line
+- Update dependencies
+
 ## 1.0.0 - 2016.02.15
 
 - Correct documentation error
