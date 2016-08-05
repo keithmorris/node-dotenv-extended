@@ -51,7 +51,7 @@ export const config = options => {
             return schemaKeys.indexOf(key) < 0;
         });
         if (options.errorOnMissing && missingKeys.length) {
-            throw new Error('MISSING CONFIG VALUES: ' + missingKeys.join(' ,'));
+            throw new Error('MISSING CONFIG VALUES: ' + missingKeys.join(', '));
         }
 
         if (options.errorOnExtra && extraKeys.length) {
