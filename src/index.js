@@ -71,3 +71,5 @@ export const config = options => {
 };
 
 export const load = config;
+
+export default {parse, config, load};
