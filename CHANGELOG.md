@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.2 - 2016.08.04
+- Add `default` export to simplify ES6 imports
+
 ## 1.0.1 - 2016.05.10
 - Add ability to load .env files from command line
 - Update dependencies
