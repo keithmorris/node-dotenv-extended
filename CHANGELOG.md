@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.3 - 2016.08.06
+- Fix comma-space typo in thrown error (Thanks @niftylettuce)
+
 ## 1.0.2 - 2016.08.04
 - Add `default` export to simplify ES6 imports
 
