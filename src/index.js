@@ -4,7 +4,6 @@
 import _ from 'lodash';
 import dotenv from 'dotenv';
 import fs from 'fs';
-import winston from 'winston';
 
 function loadEnvironmentFile(path, encoding, silent) {
     try {
@@ -12,7 +11,7 @@ function loadEnvironmentFile(path, encoding, silent) {
         return dotenv.parse(data);
     } catch (err) {
         if (!silent) {
-            winston.error(err.message);
+            console.error(err.message);
         }
         return {};
     }

@@ -11,7 +11,7 @@ var chai = require('chai'),
 chai.use(sinonChai);
 
 describe('dotenv-extended tests', function () {
-    var dotenvex, winstonStub;
+    var dotenvex;
 
     before(function () {
         mockery.enable({
@@ -19,11 +19,7 @@ describe('dotenv-extended tests', function () {
             warnOnUnregistered: false,
             useCleanCache: true
         });
-
-        winstonStub = {
-            error: sinon.stub()
-        };
-        mockery.registerMock('winston', winstonStub);
+        sinon.stub(console, 'error');
         dotenvex = require('../');
     });
 
@@ -108,6 +104,6 @@ describe('dotenv-extended tests', function () {
 
     it('Should log an error when silent is set to false and .env.defaults is missing', function () {
         dotenvex.load({ silent: false });
-        expect(winstonStub.error).to.have.been.calledOnce;
+        expect(console.error).to.have.been.calledOnce;
     });
 });
