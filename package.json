@@ -1,6 +1,6 @@
 {
   "name": "dotenv-extended",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A module for loading .env files and optionally loading defaults and a schema for validating all values are present.",
   "repository": "git@github.com:keithmorris/node-dotenv-extended.git",
   "main": "lib/index.js",
@@ -47,7 +47,6 @@
   },
   "dependencies": {
     "dotenv": "^2.0.0",
-    "lodash": "^4.3.0",
-    "winston": "^2.1.1"
+    "lodash": "^4.3.0"
   }
 }
