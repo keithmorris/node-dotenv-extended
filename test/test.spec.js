@@ -41,7 +41,7 @@ describe('dotenv-extended tests', function () {
 
     it('Should load .env file into process.env and override process.env properties with overrideProcessEnv set to true', function () {
         process.env.TEST_ONE = 'original';
-        dotenvex.load({ overrideProcessEnv: true });
+        dotenvex.load({overrideProcessEnv: true});
         expect(process.env.TEST_ONE).to.equal('overridden');
     });
 
@@ -103,7 +103,31 @@ describe('dotenv-extended tests', function () {
     });
 
     it('Should log an error when silent is set to false and .env.defaults is missing', function () {
-        dotenvex.load({ silent: false });
+        dotenvex.load({silent: false});
         expect(console.error).to.have.been.calledOnce;
+    });
+});
+
+describe('CLI supporting libraries tests', function () {
+    var parseCommand = require('../lib/bin/parse-command').parseCommand;
+    var cliArgs = [
+        '--path=test/.env.override',
+        '--defaults=test/.env.defaults.example',
+        '--schema=test/.env.schema.example',
+        'testing.sh',
+        '--jump',
+        '--dive=true',
+        'I was here'
+    ];
+
+    it('Should parse command line arguments correctly', function () {
+        var parsed = parseCommand(cliArgs);
+        expect(parsed[0]).to.eql({
+            path: 'test/.env.override',
+            defaults: 'test/.env.defaults.example',
+            schema: 'test/.env.schema.example'
+        });
+        expect(parsed[1]).to.eql('testing.sh');
+        expect(parsed[2]).to.eql(['--jump', '--dive=true', 'I was here'])
     });
 });
