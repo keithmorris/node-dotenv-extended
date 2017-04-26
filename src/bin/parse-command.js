@@ -1,6 +1,9 @@
 /**
  * Created by Keith Morris on 4/26/17.
  */
+import autoParse from 'auto-parse';
+import camelcase from 'camelcase';
+
 const dotEnvFlagRegex = /^--(.+)=(.+)/;
 
 /**
@@ -17,7 +20,7 @@ export const parseCommand = (args) => {
     for (let i = 0; i < args.length; i++) {
         const match = dotEnvFlagRegex.exec(args[i]);
         if (match) {
-            config[match[1]] = match[2];
+            config[camelcase(match[1])] = autoParse(match[2]);
         } else {
             // No more env setters, the rest of the line must be the command and args
             command = args[i];
