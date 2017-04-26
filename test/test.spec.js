@@ -111,9 +111,15 @@ describe('dotenv-extended tests', function () {
 describe('CLI supporting libraries tests', function () {
     var parseCommand = require('../lib/bin/parse-command').parseCommand;
     var cliArgs = [
+        '--encoding=utf8',
+        '--silent=true',
         '--path=test/.env.override',
         '--defaults=test/.env.defaults.example',
         '--schema=test/.env.schema.example',
+        '--error-on-missing=false',
+        '--error-on-extra=false',
+        '--assignToProcessEnv=true',
+        '--overrideProcessEnv=false',
         'testing.sh',
         '--jump',
         '--dive=true',
@@ -123,9 +129,15 @@ describe('CLI supporting libraries tests', function () {
     it('Should parse command line arguments correctly', function () {
         var parsed = parseCommand(cliArgs);
         expect(parsed[0]).to.eql({
+            encoding: 'utf8',
+            silent: true,
             path: 'test/.env.override',
             defaults: 'test/.env.defaults.example',
-            schema: 'test/.env.schema.example'
+            schema: 'test/.env.schema.example',
+            errorOnMissing: false,
+            errorOnExtra: false,
+            assignToProcessEnv: true,
+            overrideProcessEnv: false
         });
         expect(parsed[1]).to.eql('testing.sh');
         expect(parsed[2]).to.eql(['--jump', '--dive=true', 'I was here'])
