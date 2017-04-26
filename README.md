@@ -89,6 +89,42 @@ Or to specify load options:
 node -r dotenv-extended/config your_script.js dotenv_config_path=./env/.env dotenv_config_defaults=./env/.env.defaults
 ```
 
+### Load Environment Variables and pass to non-NodeJS script
+
+New in 2.0.0, is a feature inspired by [cross-env](https://www.npmjs.com/package/cross-env) to allow you to load environment variables from your `.env` files and then pass them into a non-NodeJS script such as a shell script. This can simplify the process of maintaining variables used in both your Node app and other scripts. To use this command line executable, you will either need to install globally with the `-g` flag, or install `dotenv-extended` in your project and reference it from your npm scripts.
+
+Install Globally:
+
+```
+npm install -g dotenv-extended
+```
+
+Now call your shell scripts through `dotenv-extended` (this uses the defaults):
+
+```
+dotenv-extended myshellscript.sh --whatever-flags-my-script-takes
+```
+
+Configure `dotenv-extended` by passing any of the dotenv-extended options before your command. Preceed each option with two dashes `--`:
+
+```
+dotenv-extended --path=/path/to/.env --defaults=/path/to/.env.defaults --errorOnMissing=true myshellscript.sh --whatever-flags-my-script-takes
+```
+
+The following are the flags you can pass to the `dotenv-extended` cli with their default values. these options detailed later in this document:
+
+```bash
+--encoding=utf8
+--silent=true
+--path=.env
+--defaults=.env.defaults
+--schema=.env.schema
+--errorOnMissing=false     # or --error-on-missing=false
+--errorOnExtra=false       # or --error-on-extra=false
+--assignToProcessEnv=true  # or --assign-to-process-env=true
+--overrideProcessEnv=false # or --override-process-env=true
+```
+
 ## Options
 
 Defaults are shown below:
