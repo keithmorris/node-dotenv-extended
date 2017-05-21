@@ -49,6 +49,7 @@
     ]
   },
   "dependencies": {
+    "@types/dotenv": "^4.0.0",
     "auto-parse": "^1.3.0",
     "camelcase": "^4.1.0",
     "cross-spawn": "^5.1.0",
