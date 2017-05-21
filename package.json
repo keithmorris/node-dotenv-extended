@@ -4,6 +4,7 @@
   "description": "A module for loading .env files and optionally loading defaults and a schema for validating all values are present.",
   "repository": "git@github.com:keithmorris/node-dotenv-extended.git",
   "main": "lib/index.js",
+  "types": "dotenv-extended.d.ts",
   "bin": "lib/bin/index.js",
   "scripts": {
     "test": "gulp unittest",
