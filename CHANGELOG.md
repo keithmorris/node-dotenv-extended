@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1 - 2017.05.30
+- Add TypeScript definitions (thanks @toverux)
+
+## 2.0.0 - 2017.04.26
+- Add binary for injecting .env variables into non-node scripts
+
 ## 1.0.4 - 2016.10.23
 - Replace `winston` library with generic `console` (Thanks @bostrom)
 
