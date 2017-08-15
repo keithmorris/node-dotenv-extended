@@ -21,7 +21,7 @@ MONGO_USER=dbusername
 MONGO_PASS=dbpassword!
 ```
 
-###`.env.defaults`
+### `.env.defaults`
 
 Common configuration defaults across all environments (commited to source control). This contains overall app configuration values that would be common across environments. The `.env.defaults` file is loaded first and then the `.env` file is loaded and will overwrite any values from the `.env.defaults` file. Format is identical to the `.env` file.
 
