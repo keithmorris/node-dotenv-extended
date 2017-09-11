@@ -6,7 +6,7 @@ import dotenv from '@ladjs/dotenv';
 
 function loadEnvironmentFile(path, encoding, silent) {
     try {
-        const result = dotenv.config({ path, encoding });
+        const result = dotenv.config({ path, encoding, assign: false });
         if (result.error) throw result.error;
         return result.parsed;
     } catch (err) {
