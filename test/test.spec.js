@@ -140,6 +140,6 @@ describe('CLI supporting libraries tests', function () {
             overrideProcessEnv: false
         });
         expect(parsed[1]).to.eql('testing.sh');
-        expect(parsed[2]).to.eql(['--jump', '--dive=true', 'I was here'])
+        expect(parsed[2]).to.eql(['--jump', '--dive=true', 'I was here']);
     });
 });
