@@ -1,5 +1,5 @@
 {
-  "name": "@ladjs/dotenv-extended",
+  "name": "dotenv-extended",
   "version": "2.0.1",
   "description": "A module for loading .env files and optionally loading defaults and a schema for validating all values are present.",
   "repository": "git@github.com:keithmorris/node-dotenv-extended.git",
