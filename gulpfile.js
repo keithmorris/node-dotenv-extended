@@ -46,16 +46,16 @@ gulp.task('mocha', [], function () {
 
 gulp.task('unittest', ['build'], function (callback) {
     gulp.src([
-            'lib/**/*.js'
-        ])
+        'lib/**/*.js'
+    ])
         .pipe(istanbul()) // Covering files
         .pipe(istanbul.hookRequire()) // Force `require` to return covered files
         .on('finish', function () {
             var old_cwd = process.cwd();
             process.chdir('test');
             gulp.src([
-                    '**/*.spec.js'
-                ])
+                '**/*.spec.js'
+            ])
                 .pipe(mocha())
                 .pipe(istanbul.writeReports({
                     dir: '../coverage',
@@ -71,8 +71,8 @@ gulp.task('unittest', ['build'], function (callback) {
 
 gulp.task('babel', [], function () {
     return gulp.src([
-            'src/**/*.js'
-        ])
+        'src/**/*.js'
+    ])
         .pipe(babel())
         .pipe(gulp.dest(options.buildDir));
 });

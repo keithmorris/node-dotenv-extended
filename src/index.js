@@ -2,13 +2,13 @@
  * Created by Keith Morris on 2/9/16.
  */
 import _ from 'lodash';
-import dotenv from 'dotenv';
-import fs from 'fs';
+import dotenv from '@ladjs/dotenv';
 
 function loadEnvironmentFile(path, encoding, silent) {
     try {
-        var data = fs.readFileSync(path, encoding);
-        return dotenv.parse(data);
+        const result = dotenv.config({ path, encoding });
+        if (result.error) throw result.error;
+        return result.parsed;
     } catch (err) {
         if (!silent) {
             console.error(err.message);
