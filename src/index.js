@@ -39,6 +39,12 @@ export const config = options => {
 
     let configData = _.assign({}, defaultsData, environmentData);
 
+    // use `process.env` variables if they exist and are keys defined
+    // this allows us to override variables specified in the env files
+    _.each(_.keys(configData), function (key) {
+        if (process.env[key]) configData[key] = process.env[key];
+    });
+
     if (options.errorOnMissing || options.errorOnExtra) {
         let schemaKeys = _.keys(loadEnvironmentFile(options.schema, options.encoding, options.silent));
         let configKeys = _.keys(configData);
