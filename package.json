@@ -1,6 +1,6 @@
 {
   "name": "dotenv-extended-lonestone",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "temporary fork of dotenv-extended",
   "repository": "git@github.com:lonestone/node-dotenv-extended.git",
   "main": "lib/index.js",
