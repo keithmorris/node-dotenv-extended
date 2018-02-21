@@ -60,10 +60,15 @@ export const config = options => {
 
     if (options.assignToProcessEnv) {
         if (options.overrideProcessEnv) {
-            _.assign(process.env, configData);
+            return _.assign(process.env, configData);
         } else {
             const tmp = _.assign({}, configData, process.env);
+            
+            // mutate process env for dotenvex.load usage
             _.assign(process.env, tmp);
+
+            // return tmp for cli usage
+            return tmp;
         }
     }
     return configData;
