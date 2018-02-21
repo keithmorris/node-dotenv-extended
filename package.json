@@ -1,8 +1,8 @@
 {
-  "name": "dotenv-extended",
-  "version": "2.0.1",
-  "description": "A module for loading .env files and optionally loading defaults and a schema for validating all values are present.",
-  "repository": "git@github.com:keithmorris/node-dotenv-extended.git",
+  "name": "dotenv-extended-lonestone",
+  "version": "2.0.2",
+  "description": "temporary fork of dotenv-extended",
+  "repository": "git@github.com:lonestone/node-dotenv-extended.git",
   "main": "lib/index.js",
   "types": "dotenv-extended.d.ts",
   "bin": "lib/bin/index.js",
@@ -16,7 +16,7 @@
     "dotenv",
     "environment"
   ],
-  "author": "Keith Morris <standupbass@gmail.com> (http://standupbass.wordpress.com/)",
+  "author": "gabriel <gabriel@lonetone.studio>",
   "license": "MIT",
   "devDependencies": {
     "babel-eslint": "^7.2.3",
