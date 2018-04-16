@@ -21,13 +21,13 @@ MONGO_USER=dbusername
 MONGO_PASS=dbpassword!
 ```
 
-###`.env.defaults`
+### `.env.defaults`
 
 Common configuration defaults across all environments (commited to source control). This contains overall app configuration values that would be common across environments. The `.env.defaults` file is loaded first and then the `.env` file is loaded and will overwrite any values from the `.env.defaults` file. Format is identical to the `.env` file.
 
 ### `.env.schema`
 
-Defines a schema of what variables _should_ be defined in the combination of `.env` and `.env.defaults`. Optionally, you can have the libarary throw and error if all values are not configured or if there are extra values that shouldn't be there.
+Defines a schema of what variables _should_ be defined in the combination of `.env` and `.env.defaults`. Optionally, you can have the library throw an error if all values are not configured or if there are extra values that shouldn't be there.
 
 
 The `.env.schema` file should only have the name of the variable and the `=` without any value:

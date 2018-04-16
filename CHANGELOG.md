@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.2 - 2018.04.16
+- Fix markdown header (thanks @vvo)
+- Update package dependencies (thanks @gregswindle)
+- Add node versions 8 and 9 to travis versions to test
+
 ## 2.0.1 - 2017.05.30
 - Add TypeScript definitions (thanks @toverux)
 
