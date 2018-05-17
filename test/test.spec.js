@@ -69,6 +69,13 @@ describe('dotenv-extended tests', function () {
         expect(runTest).to.throw(Error);
     });
 
+    it('Should process process.env variables before checking errors when errorCheckProcess is true', function () {
+        process.env.TEST_TWO = 'two';
+        process.env.TEST_THREE = 'three';
+        dotenvex.load({ schema: '.env.schema.example', errorCheckProcess: true });
+        expect(process.env.TEST_TWO).to.equal('two');
+    });
+
     it('Should load schema, defaults and env into correct values in process.env and returned object', function () {
         var config = dotenvex.load({
             schema: '.env.schema.example',
