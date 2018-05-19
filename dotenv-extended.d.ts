@@ -69,7 +69,7 @@ export interface IDotenvExtendedOptions {
      *
      * @default false
      */
-    errorCheckProcess?: boolean;
+    includeProcessEnv?: boolean;
 
     /**
      * Sets whether the loaded values are assigned to the process.env object.

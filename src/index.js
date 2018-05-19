@@ -28,7 +28,7 @@ export const config = options => {
             schema: '.env.schema',
             errorOnMissing: false,
             errorOnExtra: false,
-            errorCheckProcess: false,
+            includeProcessEnv: false,
             assignToProcessEnv: true,
             overrideProcessEnv: false
         };
@@ -42,7 +42,7 @@ export const config = options => {
 
     if (options.errorOnMissing || options.errorOnExtra) {
         let schemaKeys = _.keys(loadEnvironmentFile(options.schema, options.encoding, options.silent));
-        let configKeys = options.errorCheckProcess ? _.keys(_.assign({}, configData, process.env)) : _.keys(configData);
+        let configKeys = options.includeProcessEnv ? _.keys(_.assign({}, configData, process.env)) : _.keys(configData);
 
         let missingKeys = _.filter(schemaKeys, function (key) {
             return configKeys.indexOf(key) < 0;

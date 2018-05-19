@@ -121,7 +121,7 @@ The following are the flags you can pass to the `dotenv-extended` cli with their
 --schema=.env.schema
 --errorOnMissing=false     # or --error-on-missing=false
 --errorOnExtra=false       # or --error-on-extra=false
---errorCheckProcess=false       # or --error-check-process=false
+--includeProcessEnv=false       # or --error-check-process=false
 --assignToProcessEnv=true  # or --assign-to-process-env=true
 --overrideProcessEnv=false # or --override-process-env=true
 ```
@@ -139,7 +139,7 @@ require('dotenv-extended').load({
 	schema: '.env.schema',
 	errorOnMissing: false,
 	errorOnExtra: false,
-	errorCheckProcess: false,
+	includeProcessEnv: false,
 	assignToProcessEnv: true,
 	overrideProcessEnv: false
 });
@@ -179,7 +179,7 @@ Causes the library to throw a `MISSING CONFIG VALUES` error listing all of the v
 
 Causes the library to throw a `EXTRA CONFIG VALUES` error listing all of the extra variables from the combined `.env` and `.env.defaults` files.
 
-### errorCheckProcess (_default: false_)
+### includeProcessEnv (_default: false_)
 
 Causes the library add process.env variables to error checking. The variables in process.env overrides the variables in .env and .env.defaults while checking
 
