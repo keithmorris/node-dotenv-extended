@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.0 - 2018.08.07
+-  Expose entire process.env to command called with CLI
+
 ## 2.0.2 - 2018.04.16
 - Fix markdown header (thanks @vvo)
 - Update package dependencies (thanks @gregswindle)
