@@ -102,13 +102,13 @@ npm install -g dotenv-extended
 Now call your shell scripts through `dotenv-extended` (this uses the defaults):
 
 ```
-dotenv-extended myshellscript.sh --whatever-flags-my-script-takes
+dotenv-extended ./myshellscript.sh --whatever-flags-my-script-takes
 ```
 
 Configure `dotenv-extended` by passing any of the dotenv-extended options before your command. Preceed each option with two dashes `--`:
 
 ```
-dotenv-extended --path=/path/to/.env --defaults=/path/to/.env.defaults --errorOnMissing=true myshellscript.sh --whatever-flags-my-script-takes
+dotenv-extended --path=/path/to/.env --defaults=/path/to/.env.defaults --errorOnMissing=true ./myshellscript.sh --whatever-flags-my-script-takes
 ```
 
 The following are the flags you can pass to the `dotenv-extended` cli with their default values. these options detailed later in this document:

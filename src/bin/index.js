@@ -13,10 +13,11 @@ import {spawn} from 'cross-spawn';
 function loadAndExecute(args) {
     const [dotEnvConfig, command, commandArgs] = parseCommand(args);
     if (command) {
+        config(dotEnvConfig); // mutates process.env
         const proc = spawn(command, commandArgs, {
             stdio: 'inherit',
             shell: true,
-            env: config(dotEnvConfig),
+            env: process.env,
         });
 
         process.on('SIGTERM', () => proc.kill('SIGTERM'));
