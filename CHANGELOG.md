@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.0 - 2018.08.07
+- Remove support for end-of-life versions of node (4, 5, 7, 9)
+- Require node >=6.0.0
+- Update package dependencies
+
 ## 2.1.0 - 2018.08.07
 -  Expose entire process.env to command called with CLI
 
