@@ -121,7 +121,7 @@ The following are the flags you can pass to the `dotenv-extended` cli with their
 --schema=.env.schema
 --errorOnMissing=false     # or --error-on-missing=false
 --errorOnExtra=false       # or --error-on-extra=false
---includeProcessEnv=false       # or --error-check-process=false
+--includeProcessEnv=false  # or --include-process-env=false
 --assignToProcessEnv=true  # or --assign-to-process-env=true
 --overrideProcessEnv=false # or --override-process-env=true
 ```
