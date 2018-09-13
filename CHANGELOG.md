@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.3.0 - 2018.09.13
+- Add error checking flag to include process.env when it checks for required variables (thanks @Vija02)
+
 ## 2.2.0 - 2018.08.07
 - Remove support for end-of-life versions of node (4, 5, 7, 9)
 - Require node >=6.0.0

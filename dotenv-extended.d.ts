@@ -64,6 +64,14 @@ export interface IDotenvExtendedOptions {
     errorOnExtra?: boolean;
 
     /**
+     * Causes the library add process.env variables to error checking. The variables in process.env overrides the 
+     * variables in .env and .env.defaults while checking
+     *
+     * @default false
+     */
+    includeProcessEnv?: boolean;
+
+    /**
      * Sets whether the loaded values are assigned to the process.env object.
      * If this is set, you must capture the return value of the call to .load() or you will not be
      * able to use your variables.
