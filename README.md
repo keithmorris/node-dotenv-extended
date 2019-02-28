@@ -39,6 +39,7 @@ MONGO_USER=
 MONGO_PASS=
 ```
 
+Additionally `.env.schema` can include regular expressions; see [below](#load-files-with-erroronregex) for how to configure the library to throw an error upon failed regex validation.
 
 I have tried to stay as compatible as possible with the [dotenv] library but there are some differences.
 
@@ -121,6 +122,7 @@ The following are the flags you can pass to the `dotenv-extended` cli with their
 --schema=.env.schema
 --errorOnMissing=false     # or --error-on-missing=false
 --errorOnExtra=false       # or --error-on-extra=false
+--errorOnRegex=false       # or --error-on-regex=false
 --includeProcessEnv=false  # or --include-process-env=false
 --assignToProcessEnv=true  # or --assign-to-process-env=true
 --overrideProcessEnv=false # or --override-process-env=true
@@ -139,6 +141,7 @@ require('dotenv-extended').load({
 	schema: '.env.schema',
 	errorOnMissing: false,
 	errorOnExtra: false,
+	errorOnRegex: false,
 	includeProcessEnv: false,
 	assignToProcessEnv: true,
 	overrideProcessEnv: false
@@ -179,6 +182,10 @@ Causes the library to throw a `MISSING CONFIG VALUES` error listing all of the v
 
 Causes the library to throw a `EXTRA CONFIG VALUES` error listing all of the extra variables from the combined `.env` and `.env.defaults` files.
 
+### errorOnRegex (_default: false_)
+
+Causes the library to throw a `REGEX MISMATCH` error listing all of the invalid variables from the combined `.env` and `.env.defaults` files. Also a `SyntaxError` is thrown in case `.env.schema` contains a syntactically invalid regex.
+
 ### includeProcessEnv (_default: false_)
 
 Causes the library add process.env variables to error checking. The variables in process.env overrides the variables in .env and .env.defaults while checking
@@ -211,8 +218,8 @@ DB_DATABASE=MyAppDB
 
 ```
 # .env.schema
-DB_HOST=
-DB_USER=
+DB_HOST=[a-z]+
+DB_USER=[a-z]+
 DB_PASS=
 DB_DATABASE=
 API_KEY=
@@ -248,6 +255,16 @@ var myConfig = require('dotenv-extended').load({
 });
 
 Throws ERROR `EXTRA CONFIG VALUES: SHARE_URL`
+```
+
+### Load files with `errorOnRegex`
+
+```
+var myConfig = require('dotenv-extended').load({
+    errorOnRegex: true
+});
+
+Throws ERROR `REGEX MISMATCH: DB_USER`
 ```
 
 ## Contributing
