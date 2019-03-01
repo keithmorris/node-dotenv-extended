@@ -64,6 +64,14 @@ export interface IDotenvExtendedOptions {
     errorOnExtra?: boolean;
 
     /**
+     * Causes the library to throw a REGEX MISMATCH error listing all of the invalid variables from the combined .env
+     * and .env.defaults files. Also a SyntaxError is thrown in case .env.schema contains a syntactically invalid regex.
+     *
+     * @default false
+     */
+    errorOnRegex?: boolean;
+
+    /**
      * Causes the library add process.env variables to error checking. The variables in process.env overrides the 
      * variables in .env and .env.defaults while checking
      *

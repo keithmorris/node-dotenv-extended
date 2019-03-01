@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.4.0 - 2019.03.01
+- Add ability to put regexs in the `.env.schema` file to validate and limit the values that can be added to the `.evn` and `.env.defaults` files (thanks @epiphone)
+
 ## 2.3.0 - 2018.09.13
 - Add error checking flag to include process.env when it checks for required variables (thanks @Vija02)
 

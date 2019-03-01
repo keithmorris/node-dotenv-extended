@@ -28,6 +28,7 @@ export const config = options => {
             schema: '.env.schema',
             errorOnMissing: false,
             errorOnExtra: false,
+            errorOnRegex: false,
             includeProcessEnv: false,
             assignToProcessEnv: true,
             overrideProcessEnv: false
@@ -40,9 +41,11 @@ export const config = options => {
 
     let configData = _.assign({}, defaultsData, environmentData);
 
-    if (options.errorOnMissing || options.errorOnExtra) {
-        let schemaKeys = _.keys(loadEnvironmentFile(options.schema, options.encoding, options.silent));
-        let configKeys = options.includeProcessEnv ? _.keys(_.assign({}, configData, process.env)) : _.keys(configData);
+    if (options.errorOnMissing || options.errorOnExtra || options.errorOnRegex) {
+        const schema = loadEnvironmentFile(options.schema, options.encoding, options.silent);
+        const config = options.includeProcessEnv ? _.assign({}, configData, process.env) : configData;
+        const schemaKeys = _.keys(schema);
+        const configKeys = _.keys(config);
 
         let missingKeys = _.filter(schemaKeys, function (key) {
             return configKeys.indexOf(key) < 0;
@@ -56,6 +59,18 @@ export const config = options => {
 
         if (options.errorOnExtra && extraKeys.length) {
             throw new Error('EXTRA CONFIG VALUES: ' + extraKeys.join(', '));
+        }
+
+        if (options.errorOnRegex) {
+            const regexMismatchKeys = _.filter(schemaKeys, function (key) {
+                if (schema[key]) {
+                    return !new RegExp(schema[key]).test(config[key]);
+                }
+            });
+
+            if (regexMismatchKeys.length) {
+                throw new Error('REGEX MISMATCH: ' + regexMismatchKeys.join(', '));
+            }
         }
     }
 

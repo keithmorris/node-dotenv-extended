@@ -1,6 +1,6 @@
 {
   "name": "dotenv-extended",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "A module for loading .env files and optionally loading defaults and a schema for validating all values are present.",
   "repository": "git@github.com:keithmorris/node-dotenv-extended.git",
   "main": "lib/index.js",
@@ -42,6 +42,7 @@
     "gulp-istanbul": "^1.1.1",
     "gulp-mocha": "6.0.0",
     "mockery": "^2.0.0",
+    "natives": "^1.1.6",
     "run-sequence": "2.2.1",
     "sinon": "6.1.4",
     "sinon-chai": "3.2.0"
