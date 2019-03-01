@@ -109,6 +109,51 @@ describe('dotenv-extended tests', function () {
         expect(process.env.TEST_THREE).to.equal(undefined);
     });
 
+    it('Should pass regex validation when errorOnRegex is true and values match patterns', function () {
+        var runTest = function () {
+            dotenvex.load({
+                schema: '.env.schema.regex',
+                path: '.env.override',
+                errorOnRegex: true
+            });
+        };
+        expect(runTest).not.to.throw(Error);
+    });
+
+    it('Should throw a SyntaxError when a schema regex is invalid and errorOnRegex is true', function () {
+        var runTest = function () {
+            dotenvex.load({
+                schema: '.env.schema.regex-invalid',
+                errorOnRegex: true
+            });
+        };
+        expect(runTest).to.throw(SyntaxError);
+    });
+
+    it('Should not throw a SyntaxError when a schema regex is invalid but errorOnRegex is false', function () {
+        var runTest = function () {
+            dotenvex.load({
+                schema: '.env.schema.regex-invalid',
+                errorOnRegex: false
+            });
+        };
+        expect(runTest).not.to.throw(SyntaxError);
+    });
+
+    it('Should throw an error when an item does not match schema regex and errorOnRegex is true', function () {
+        process.env.TEST_TWO = 'string with whitespace';
+        process.env.TEST_THREE = '';
+        var runTest = function () {
+            dotenvex.load({
+                schema: '.env.schema.regex',
+                path: '.env.override',
+                includeProcessEnv: true,
+                errorOnRegex: true
+            });
+        };
+        expect(runTest).to.throw('REGEX MISMATCH: TEST_TWO, TEST_THREE');
+    });
+
     it('Should log an error when silent is set to false and .env.defaults is missing', function () {
         dotenvex.load({silent: false});
         expect(console.error).to.have.been.calledOnce;
@@ -125,6 +170,7 @@ describe('CLI supporting libraries tests', function () {
         '--schema=test/.env.schema.example',
         '--error-on-missing=false',
         '--error-on-extra=false',
+        '--error-on-regex=false',
         '--assignToProcessEnv=true',
         '--overrideProcessEnv=false',
         'testing.sh',
@@ -143,10 +189,11 @@ describe('CLI supporting libraries tests', function () {
             schema: 'test/.env.schema.example',
             errorOnMissing: false,
             errorOnExtra: false,
+            errorOnRegex: false,
             assignToProcessEnv: true,
             overrideProcessEnv: false
         });
         expect(parsed[1]).to.eql('testing.sh');
-        expect(parsed[2]).to.eql(['--jump', '--dive=true', 'I was here'])
+        expect(parsed[2]).to.eql(['--jump', '--dive=true', 'I was here']);
     });
 });

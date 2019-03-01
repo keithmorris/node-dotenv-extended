@@ -42,6 +42,7 @@
     "gulp-istanbul": "^1.1.1",
     "gulp-mocha": "6.0.0",
     "mockery": "^2.0.0",
+    "natives": "^1.1.6",
     "run-sequence": "2.2.1",
     "sinon": "6.1.4",
     "sinon-chai": "3.2.0"
