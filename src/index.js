@@ -1,7 +1,6 @@
 /**
  * Created by Keith Morris on 2/9/16.
  */
-import _ from 'lodash';
 import dotenv from 'dotenv';
 import fs from 'fs';
 
@@ -34,23 +33,23 @@ export const config = options => {
             overrideProcessEnv: false
         };
 
-    options = _.assign({}, defaultOptions, options);
+    options = Object.assign({}, defaultOptions, options);
 
     defaultsData = loadEnvironmentFile(options.defaults, options.encoding, options.silent);
     environmentData = loadEnvironmentFile(options.path, options.encoding, options.silent);
 
-    let configData = _.assign({}, defaultsData, environmentData);
+    let configData = Object.assign({}, defaultsData, environmentData);
 
     if (options.errorOnMissing || options.errorOnExtra || options.errorOnRegex) {
         const schema = loadEnvironmentFile(options.schema, options.encoding, options.silent);
-        const config = options.includeProcessEnv ? _.assign({}, configData, process.env) : configData;
-        const schemaKeys = _.keys(schema);
-        const configKeys = _.keys(config);
+        const config = options.includeProcessEnv ? Object.assign({}, configData, process.env) : configData;
+        const schemaKeys = Object.keys(schema);
+        const configKeys = Object.keys(config);
 
-        let missingKeys = _.filter(schemaKeys, function (key) {
+        let missingKeys = schemaKeys.filter(function (key) {
             return configKeys.indexOf(key) < 0;
         });
-        let extraKeys = _.filter(configKeys, function (key) {
+        let extraKeys = configKeys.filter(function (key) {
             return schemaKeys.indexOf(key) < 0;
         });
         if (options.errorOnMissing && missingKeys.length) {
@@ -62,7 +61,7 @@ export const config = options => {
         }
 
         if (options.errorOnRegex) {
-            const regexMismatchKeys = _.filter(schemaKeys, function (key) {
+            const regexMismatchKeys = schemaKeys.filter(function (key) {
                 if (schema[key]) {
                     return !new RegExp(schema[key]).test(config[key]);
                 }
@@ -76,10 +75,10 @@ export const config = options => {
 
     if (options.assignToProcessEnv) {
         if (options.overrideProcessEnv) {
-            _.assign(process.env, configData);
+            Object.assign(process.env, configData);
         } else {
-            const tmp = _.assign({}, configData, process.env);
-            _.assign(process.env, tmp);
+            const tmp = Object.assign({}, configData, process.env);
+            Object.assign(process.env, tmp);
         }
     }
     return configData;
