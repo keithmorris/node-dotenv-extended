@@ -1,44 +1,42 @@
 /**
  * Created by Keith Morris on 2/9/16.
  */
-
-var
+const
     babel = require('gulp-babel'),
     del = require('del'),
     eslint = require('gulp-eslint'),
     gulp = require('gulp')
-    ;
+;
 
-var options = {
+const options = {
     buildDir: 'lib'
 };
 
-gulp.task('clean', gulp.series(function () {
-    return del([
-        options.buildDir,
-        'coverage'
-    ]);
-}));
+const cleanTask = () => del([
+    options.buildDir,
+    'coverage',
+    '.nyc_output'
+]);
 
-gulp.task('watch', gulp.series(function () {
+const watchTask = () => {
     gulp.watch(['src/**/*.js'], ['build']);
-}));
+};
 
-gulp.task('lint', gulp.series(function () {
-    return gulp.src(['src/**/*.js'])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-}));
+const lintTask = () => gulp.src(['src/**/*.js'])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 
-gulp.task('babel', gulp.series(function () {
-    return gulp.src([
-        'src/**/*.js'
-    ])
-        .pipe(babel())
-        .pipe(gulp.dest(options.buildDir));
-}));
+const babelTask = () => gulp.src(['src/**/*.js'])
+    .pipe(babel())
+    .pipe(gulp.dest(options.buildDir));
 
-gulp.task('build', gulp.series(['clean', 'lint', 'babel'], function (callback) {
+
+gulp.task('clean', cleanTask);
+gulp.task('watch', watchTask);
+gulp.task('lint', lintTask);
+gulp.task('babel', babelTask);
+
+gulp.task('build', gulp.series(['clean', 'lint', 'babel'], callback => {
     callback();
 }));
