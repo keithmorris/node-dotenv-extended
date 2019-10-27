@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.5.0 - 2019.10.27
+- Update dependencies and remove useless dependencies (thanks @webdevium)
+- Modernize and streamline build process
+
 ## 2.4.0 - 2019.03.01
 - Add ability to put regexs in the `.env.schema` file to validate and limit the values that can be added to the `.evn` and `.env.defaults` files (thanks @epiphone)
 
