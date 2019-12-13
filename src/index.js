@@ -44,12 +44,13 @@ export const config = options => {
         const schema = loadEnvironmentFile(options.schema, options.encoding, options.silent);
         const config = options.includeProcessEnv ? Object.assign({}, configData, process.env) : configData;
         const schemaKeys = Object.keys(schema);
+        const configOnlyKeys = Object.keys(configData);
         const configKeys = Object.keys(config);
 
         let missingKeys = schemaKeys.filter(function (key) {
             return configKeys.indexOf(key) < 0;
         });
-        let extraKeys = configKeys.filter(function (key) {
+        let extraKeys = configOnlyKeys.filter(function (key) {
             return schemaKeys.indexOf(key) < 0;
         });
         if (options.errorOnMissing && missingKeys.length) {
