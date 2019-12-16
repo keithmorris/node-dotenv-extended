@@ -39,13 +39,13 @@ export const config = options => {
     environmentData = loadEnvironmentFile(options.path, options.encoding, options.silent);
 
     let configData = Object.assign({}, defaultsData, environmentData);
+    const config = options.includeProcessEnv ? Object.assign({}, configData, process.env) : configData;
+    const configOnlyKeys = Object.keys(configData);
+    const configKeys = Object.keys(config);
 
     if (options.errorOnMissing || options.errorOnExtra || options.errorOnRegex) {
         const schema = loadEnvironmentFile(options.schema, options.encoding, options.silent);
-        const config = options.includeProcessEnv ? Object.assign({}, configData, process.env) : configData;
         const schemaKeys = Object.keys(schema);
-        const configOnlyKeys = Object.keys(configData);
-        const configKeys = Object.keys(config);
 
         let missingKeys = schemaKeys.filter(function (key) {
             return configKeys.indexOf(key) < 0;
@@ -71,6 +71,14 @@ export const config = options => {
             if (regexMismatchKeys.length) {
                 throw new Error('REGEX MISMATCH: ' + regexMismatchKeys.join(', '));
             }
+        }
+    }
+
+    // the returned configData object should include process.env that override
+    if (options.includeProcessEnv && !options.overrideProcessEnv) {
+        for (let i=0; i<configKeys.length; i++) {
+            if (typeof process.env[configKeys[i]] !== 'undefined')
+                configData[configKeys[i]] = process.env[configKeys[i]];
         }
     }
 
