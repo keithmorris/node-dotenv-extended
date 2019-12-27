@@ -6,7 +6,7 @@ import fs from 'fs';
 
 function loadEnvironmentFile(path, encoding, silent) {
     try {
-        var data = fs.readFileSync(path, encoding);
+        const data = fs.readFileSync(path, encoding);
         return dotenv.parse(data);
     } catch (err) {
         if (!silent) {
@@ -18,7 +18,7 @@ function loadEnvironmentFile(path, encoding, silent) {
 export const parse = dotenv.parse.bind(dotenv);
 export const config = options => {
 
-    var defaultsData, environmentData,
+    let defaultsData, environmentData,
         defaultOptions = {
             encoding: 'utf8',
             silent: true,
