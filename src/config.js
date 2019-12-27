@@ -1,4 +1,4 @@
-import {config} from './index';
+import { config } from './index';
 
 function reduceArguments(prev, curr) {
     const matches = curr.match(/^dotenv_config_(.+)=(.+)/);

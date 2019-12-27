@@ -6,9 +6,9 @@
  * https://github.com/kentcdodds/cross-env
  */
 
-import  {config} from '..';
-import {parseCommand} from './parse-command';
-import {spawn} from 'cross-spawn';
+import { config } from '..';
+import { parseCommand } from './parse-command';
+import { spawn } from 'cross-spawn';
 
 function loadAndExecute(args) {
     const [dotEnvConfig, command, commandArgs] = parseCommand(args);

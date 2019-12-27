@@ -15,6 +15,7 @@ function loadEnvironmentFile(path, encoding, silent) {
         return {};
     }
 }
+
 export const parse = dotenv.parse.bind(dotenv);
 export const config = options => {
 
@@ -76,7 +77,7 @@ export const config = options => {
 
     // the returned configData object should include process.env that override
     if (options.includeProcessEnv && !options.overrideProcessEnv) {
-        for (let i=0; i<configKeys.length; i++) {
+        for (let i = 0; i < configKeys.length; i++) {
             if (typeof process.env[configKeys[i]] !== 'undefined')
                 configData[configKeys[i]] = process.env[configKeys[i]];
         }
