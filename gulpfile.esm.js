@@ -10,31 +10,25 @@ const options = {
     buildDir: 'lib'
 };
 
-const cleanTask = () => del([
+export const clean = () => del([
     options.buildDir,
     'coverage',
     '.nyc_output'
 ]);
 
-const watchTask = () => {
-    gulp.watch(['src/**/*.js'], ['build']);
+export const watch = () => {
+    gulp.watch(['src/**/*.js'], gulp.series([build]));
 };
 
-const lintTask = () => gulp.src(['src/**/*.js'])
+export const lint = () => gulp.src(['src/**/*.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
 
-const babelTask = () => gulp.src(['src/**/*.js'])
+export const scripts = () => gulp.src(['src/**/*.js'])
     .pipe(babel())
     .pipe(gulp.dest(options.buildDir));
 
+export const build = gulp.series([clean, lint, scripts]);
 
-gulp.task('clean', cleanTask);
-gulp.task('watch', watchTask);
-gulp.task('lint', lintTask);
-gulp.task('babel', babelTask);
-
-gulp.task('build', gulp.series(['clean', 'lint', 'babel'], callback => {
-    callback();
-}));
+export default build;
