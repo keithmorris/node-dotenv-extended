@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0 - 2019.12.27
+- Now requires Node >= 8
+- Update all dependencies to latest (some aren't compatible with Node 6)
+- Refactor build file
+- Minor code cleanup
+
 ## 2.5.0 - 2019.10.27
 - Update dependencies and remove useless dependencies (thanks @webdevium)
 - Modernize and streamline build process
