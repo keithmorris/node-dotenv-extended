@@ -10,7 +10,7 @@
     "node": ">=6"
   },
   "scripts": {
-    "test": "npm run build && cd test && nyc --reporter=lcovonly mocha --require babel-register *.spec.js",
+    "test": "npm run build && cd test && nyc --reporter=lcovonly mocha --require esm *.spec.js",
     "report": "nyc report",
     "coveralls": "npm run report -- --reporter=text-lcov | coveralls",
     "lint": "gulp lint",
