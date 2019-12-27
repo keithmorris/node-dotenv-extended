@@ -1,12 +1,10 @@
 /**
  * Created by Keith Morris on 2/9/16.
  */
-const
-    babel = require('gulp-babel'),
-    del = require('del'),
-    eslint = require('gulp-eslint'),
-    gulp = require('gulp')
-;
+import babel from 'gulp-babel';
+import del from 'del';
+import eslint from 'gulp-eslint';
+import gulp from 'gulp';
 
 const options = {
     buildDir: 'lib'
