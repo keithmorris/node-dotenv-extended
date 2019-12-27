@@ -4,7 +4,7 @@
 import babel from 'gulp-babel';
 import del from 'del';
 import eslint from 'gulp-eslint';
-import gulp from 'gulp';
+import { src, dest, series, watch } from 'gulp';
 
 const options = {
     buildDir: 'lib'
@@ -16,19 +16,20 @@ export const clean = () => del([
     '.nyc_output'
 ]);
 
-export const watch = () => {
-    gulp.watch(['src/**/*.js'], gulp.series([build]));
+const watchFiles = () => {
+    watch(['src/**/*.js'], series([build]));
 };
+export { watchFiles as watch };
 
-export const lint = () => gulp.src(['src/**/*.js'])
+export const lint = () => src(['src/**/*.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
 
-export const scripts = () => gulp.src(['src/**/*.js'])
+export const scripts = () => src(['src/**/*.js'])
     .pipe(babel())
-    .pipe(gulp.dest(options.buildDir));
+    .pipe(dest(options.buildDir));
 
-export const build = gulp.series([clean, lint, scripts]);
+export const build = series([clean, lint, scripts]);
 
 export default build;
