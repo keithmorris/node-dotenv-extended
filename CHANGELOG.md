@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.7.1 - 2019.12.30
+- Update README to include `import` syntax
+
+## 2.7.0 - 2019.12.13
+- fix: check for extra keys needs to be specific to schema
+
 ## 2.5.0 - 2019.10.27
 - Update dependencies and remove useless dependencies (thanks @webdevium)
 - Modernize and streamline build process
