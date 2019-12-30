@@ -144,7 +144,7 @@ The following are the flags you can pass to the `dotenv-extended` cli with their
 
 Defaults are shown below:
 
-```
+```javascript
 require('dotenv-extended').load({
 	encoding: 'utf8',
 	silent: true,
@@ -162,7 +162,7 @@ require('dotenv-extended').load({
 
 The function always returns an object containing the variables loaded from the `.env` and `.env.defaults` files. The returned object does not contain the properties held in `process.env` but rather only the ones that are loaded from the `.env` and `.env.defaults` files.
 
-```
+```javascript
 var myConfig = require('dotenv-extended').load();
 ```
 
@@ -239,7 +239,7 @@ API_KEY=
 
 ### Load files with default options
 
-```
+```javascript
 var myConfig = require('dotenv-extended').load();
 
 myConfig.DB_HOST === process.env.DB_HOST === "localhost"
@@ -251,32 +251,32 @@ myConfig.SHARE_URL === process.env.SHARE_URL === "http://www.example.com"
 
 ### Load files with `errorOnMissing`
 
-```
+```javascript
 var myConfig = require('dotenv-extended').load({
     errorOnMissing: true
 });
 
-Throws ERROR `MISSING CONFIG VALUES: API_KEY`
+// Throws ERROR `MISSING CONFIG VALUES: API_KEY`
 ```
 
 ### Load files with `errorOnExtra`
 
-```
+```javascript
 var myConfig = require('dotenv-extended').load({
     errorOnExtra: true
 });
 
-Throws ERROR `EXTRA CONFIG VALUES: SHARE_URL`
+// Throws ERROR `EXTRA CONFIG VALUES: SHARE_URL`
 ```
 
 ### Load files with `errorOnRegex`
 
-```
+```javascript
 var myConfig = require('dotenv-extended').load({
     errorOnRegex: true
 });
 
-Throws ERROR `REGEX MISMATCH: DB_USER`
+// Throws ERROR `REGEX MISMATCH: DB_USER`
 ```
 
 ## Contributing
