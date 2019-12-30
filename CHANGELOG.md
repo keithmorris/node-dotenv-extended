@@ -1,10 +1,16 @@
 # Changelog
 
-## 3.0.0 - 2019.12.27
+## 3.0.0 - 2019.12.30
 - Now requires Node >= 8
 - Update all dependencies to latest (some aren't compatible with Node 6)
 - Refactor build file
 - Minor code cleanup
+
+## 2.7.1 - 2019.12.30
+- Update README to include `import` syntax
+
+## 2.7.0 - 2019.12.13
+- fix: check for extra keys needs to be specific to schema
 
 ## 2.5.0 - 2019.10.27
 - Update dependencies and remove useless dependencies (thanks @webdevium)
