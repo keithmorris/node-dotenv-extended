@@ -57,6 +57,13 @@ As early as possible in your main script:
 require('dotenv-extended').load();
 ```
 
+Or if you prefer import syntax:
+
+```
+import dotEnvExtended from 'dotenv-extended';
+dotEnvExtended.load(); 
+```
+
 Create a `.env` file in the root directory of your project. Add environment-specific variables on new lines in the form of `NAME=VALUE`.
 
 For example:
