@@ -2,7 +2,7 @@
  * Created by Keith Morris on 2/9/16.
  */
 'use strict';
-var chai = require('chai'),
+const chai = require('chai'),
     expect = chai.expect,
     mockery = require('mockery'),
     sinon = require('sinon'),
@@ -11,7 +11,7 @@ var chai = require('chai'),
 chai.use(sinonChai);
 
 describe('dotenv-extended tests', function () {
-    var dotenvex;
+    let dotenvex;
 
     before(function () {
         mockery.enable({
@@ -160,9 +160,24 @@ describe('dotenv-extended tests', function () {
     });
 });
 
-describe('CLI supporting libraries tests', function () {
-    var parseCommand = require('../lib/bin/parse-command').parseCommand;
-    var cliArgs = [
+describe('Supporting libraries tests', () => {
+    beforeEach(function () {
+        delete process.env.DOTENV_CONFIG_ENCODING;
+        delete process.env.DOTENV_CONFIG_SILENT;
+        delete process.env.DOTENV_CONFIG_PATH;
+        delete process.env.DOTENV_CONFIG_DEFAULTS;
+        delete process.env.DOTENV_CONFIG_SCHEMA;
+        delete process.env.DOTENV_CONFIG_ERROR_ON_MISSING;
+        delete process.env.DOTENV_CONFIG_ERROR_ON_EXTRA;
+        delete process.env.DOTENV_CONFIG_ERROR_ON_REGEX;
+        delete process.env.DOTENV_CONFIG_INCLUDED_PROCESS_ENV;
+        delete process.env.DOTENV_CONFIG_ASSIGN_TO_PROCESS_ENV;
+        delete process.env.DOTENV_CONFIG_OVERRIDE_PROCESS_ENV;
+    });
+
+    const parseCommand = require('../lib/utils/parse-command').parseCommand;
+    const getConfigFromEnv = require('../lib/utils/config-from-env').getConfigFromEnv;
+    const cliArgs = [
         '--encoding=utf8',
         '--silent=true',
         '--path=test/.env.override',
@@ -179,9 +194,9 @@ describe('CLI supporting libraries tests', function () {
         'I was here'
     ];
 
-    it('Should parse command line arguments correctly', function () {
-        var parsed = parseCommand(cliArgs);
-        expect(parsed[0]).to.eql({
+    it('parseCommand should parse command line arguments correctly', () => {
+        const parsed = parseCommand(cliArgs);
+        const expected = {
             encoding: 'utf8',
             silent: true,
             path: 'test/.env.override',
@@ -192,8 +207,38 @@ describe('CLI supporting libraries tests', function () {
             errorOnRegex: false,
             assignToProcessEnv: true,
             overrideProcessEnv: false
-        });
+        };
+        expect(parsed[0]).to.eql(expected);
         expect(parsed[1]).to.eql('testing.sh');
         expect(parsed[2]).to.eql(['--jump', '--dive=true', 'I was here']);
+    });
+
+    it('getConfigFromEnv should parse command line arguments correctly', () => {
+        const expected = {
+            encoding: 'utf8',
+            silent: true,
+            path: '.env',
+            defaults: '.env.defaults',
+            schema: '.env.schema',
+            errorOnMissing: false,
+            errorOnExtra: false,
+            errorOnRegex: false,
+            includedProcessEnv: false,
+            assignToProcessEnv: true,
+            overrideProcessEnv: false
+        };
+        process.env.DOTENV_CONFIG_ENCODING = 'utf8';
+        process.env.DOTENV_CONFIG_SILENT = 'true';
+        process.env.DOTENV_CONFIG_PATH = '.env';
+        process.env.DOTENV_CONFIG_DEFAULTS = '.env.defaults';
+        process.env.DOTENV_CONFIG_SCHEMA = '.env.schema';
+        process.env.DOTENV_CONFIG_ERROR_ON_MISSING = 'false';
+        process.env.DOTENV_CONFIG_ERROR_ON_EXTRA = 'false';
+        process.env.DOTENV_CONFIG_ERROR_ON_REGEX = 'false';
+        process.env.DOTENV_CONFIG_INCLUDED_PROCESS_ENV = 'false';
+        process.env.DOTENV_CONFIG_ASSIGN_TO_PROCESS_ENV = 'true';
+        process.env.DOTENV_CONFIG_OVERRIDE_PROCESS_ENV = 'false';
+        const parsed = getConfigFromEnv(process.env);
+        expect(parsed).to.eql(expected);
     });
 });

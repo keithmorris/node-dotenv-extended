@@ -30,3 +30,5 @@ export const parseCommand = (args) => {
     }
     return [config, command, commandArgs];
 };
+
+export default parseCommand;

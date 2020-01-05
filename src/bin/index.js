@@ -7,7 +7,7 @@
  */
 
 import { config } from '..';
-import { parseCommand } from './parse-command';
+import parseCommand from '../utils/parse-command';
 import { spawn } from 'cross-spawn';
 
 function loadAndExecute(args) {
