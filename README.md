@@ -38,6 +38,7 @@ Defines a schema of what variables _should_ be defined in the combination of `.e
 The `.env.schema` file should only have the name of the variable and the `=` without any value:
 
 ```
+# .env.schema
 MONGO_HOST=
 MONGO_DATABASE=
 MONGO_USER=
@@ -92,14 +93,22 @@ mongoose.connect('mongodb://' + process.env.MONGO_HOST + '/' + process.env.MONGO
 ### Load Configs from command line
 
 You may also load the `.env` files from the command line. Add in the require `dotenv-extended/config` along with any of the options that the `load` method takes prefixed with `dotenv_config_`. e.g.:
-```
+```bash
 node -r dotenv-extended/config your_script.js
 ```
 
 Or to specify load options:
 
-```
+```bash
 node -r dotenv-extended/config your_script.js dotenv_config_path=./env/.env dotenv_config_defaults=./env/.env.defaults
+```
+
+You can also set configuration options via environment variables (See additional info on using environment variables for configuration below):
+
+```bash
+export DOTENV_CONFIG_PATH=./env/.env
+export DOTENV_CONFIG_DEFAULTS=./env/.env.defaults
+node -r dotenv-extended/config your_script.js
 ```
 
 ### Load Environment Variables and pass to non-NodeJS script
@@ -140,6 +149,15 @@ The following are the flags you can pass to the `dotenv-extended` cli with their
 --overrideProcessEnv=false # or --override-process-env=true
 ```
 
+You can also set configuration options via environment variables (See additional info on using environment variables for configuration below):
+
+```bash
+export DOTENV_CONFIG_PATH=/path/to/.env 
+export DOTENV_CONFIG_DEFAULTS=/path/to/.env.defaults
+export DOTENV_CONFIG_ERROR_ON_MISSING=true
+dotenv-extended ./myshellscript.sh --whatever-flags-my-script-takes
+```
+
 ## Options
 
 Defaults are shown below:
@@ -164,6 +182,23 @@ The function always returns an object containing the variables loaded from the `
 
 ```javascript
 var myConfig = require('dotenv-extended').load();
+```
+### Set configuration options through environment variables (new in 3.0.0)
+
+You can also set `dotenv-extended` configuration options from environment variables prefixed with `DOTENV_CONFIG_`. The order of loading is Default Options > Environment Variables > Options passed to `load` function. The configuration options are overridden by each subsequent set of values. Here are the possible environment variables with the defaults:
+
+```
+DOTENV_CONFIG_ENCODING='utf8'
+DOTENV_CONFIG_SILENT='true'
+DOTENV_CONFIG_PATH='.env'
+DOTENV_CONFIG_DEFAULTS='.env.defaults'
+DOTENV_CONFIG_SCHEMA='.env.schema'
+DOTENV_CONFIG_ERROR_ON_MISSING='false'
+DOTENV_CONFIG_ERROR_ON_EXTRA='false'
+DOTENV_CONFIG_ERROR_ON_REGEX='false'
+DOTENV_CONFIG_INCLUDED_PROCESS_ENV='false'
+DOTENV_CONFIG_ASSIGN_TO_PROCESS_ENV='true'
+DOTENV_CONFIG_OVERRIDE_PROCESS_ENV='false'
 ```
 
 ### encoding (_default: utf8_)

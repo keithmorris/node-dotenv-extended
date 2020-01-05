@@ -5,6 +5,7 @@
 - Update all dependencies to latest (some aren't compatible with Node 6)
 - Refactor build file
 - Minor code cleanup
+- Add ability to set dotenv options from environment variables.
 
 ## 2.7.1 - 2019.12.30
 - Update README to include `import` syntax
