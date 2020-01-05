@@ -2,18 +2,17 @@
  * Created by Keith Morris on 2/9/16.
  */
 'use strict';
-const chai = require('chai'),
-    expect = chai.expect,
-    mockery = require('mockery'),
-    sinon = require('sinon'),
-    sinonChai = require('sinon-chai');
+import chai, { expect } from 'chai';
+import mockery from 'mockery';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 
 chai.use(sinonChai);
 
-describe('dotenv-extended tests', function () {
+describe('dotenv-extended tests', () => {
     let dotenvex;
 
-    before(function () {
+    before(() => {
         mockery.enable({
             warnOnReplace: false,
             warnOnUnregistered: false,
@@ -23,30 +22,30 @@ describe('dotenv-extended tests', function () {
         dotenvex = require('../');
     });
 
-    after(function () {
+    after(() => {
         mockery.disable();
     });
 
-    beforeEach(function () {
+    beforeEach(() => {
         delete process.env.TEST_ONE;
         delete process.env.TEST_TWO;
         delete process.env.TEST_THREE;
     });
 
-    it('Should load .env file into process.env and not override process.env properties by default', function () {
+    it('Should load .env file into process.env and not override process.env properties by default', () => {
         process.env.TEST_ONE = 'original';
         dotenvex.load();
         expect(process.env.TEST_ONE).to.equal('original');
     });
 
-    it('Should load .env file into process.env and override process.env properties with overrideProcessEnv set to true', function () {
+    it('Should load .env file into process.env and override process.env properties with overrideProcessEnv set to true', () => {
         process.env.TEST_ONE = 'original';
         dotenvex.load({overrideProcessEnv: true});
         expect(process.env.TEST_ONE).to.equal('overridden');
     });
 
-    it('Should throw an error when items from schema are missing and errorOnMissing is true', function () {
-        var runTest = function () {
+    it('Should throw an error when items from schema are missing and errorOnMissing is true', () => {
+        const runTest = () => {
             dotenvex.load({
                 schema: '.env.schema.example',
                 defaults: '.env.defaults.example',
@@ -57,8 +56,8 @@ describe('dotenv-extended tests', function () {
         expect(runTest).to.throw(Error);
     });
 
-    it('Should throw an error when there are extra items that are not in schema and errorOnExtra is true', function () {
-        var runTest = function () {
+    it('Should throw an error when there are extra items that are not in schema and errorOnExtra is true', () => {
+        const runTest = function () {
             dotenvex.load({
                 schema: '.env.schema.example',
                 defaults: '.env.defaults.example',
@@ -69,15 +68,15 @@ describe('dotenv-extended tests', function () {
         expect(runTest).to.throw(Error);
     });
 
-    it('Should process process.env variables before checking errors when includeProcessEnv is true', function () {
+    it('Should process process.env variables before checking errors when includeProcessEnv is true', () => {
         process.env.TEST_TWO = 'two';
         process.env.TEST_THREE = 'three';
-        dotenvex.load({ schema: '.env.schema.example', includeProcessEnv: true });
+        dotenvex.load({schema: '.env.schema.example', includeProcessEnv: true});
         expect(process.env.TEST_TWO).to.equal('two');
     });
 
-    it('Should load schema, defaults and env into correct values in process.env and returned object', function () {
-        var config = dotenvex.load({
+    it('Should load schema, defaults and env into correct values in process.env and returned object', () => {
+        const config = dotenvex.load({
             schema: '.env.schema.example',
             defaults: '.env.defaults.example',
             path: '.env.override',
@@ -92,8 +91,8 @@ describe('dotenv-extended tests', function () {
         expect(process.env.TEST_THREE).to.equal('three');
     });
 
-    it('Should not load .env files into process.env if assignToProcessEnv is false', function () {
-        var config = dotenvex.load({
+    it('Should not load .env files into process.env if assignToProcessEnv is false', () => {
+        const config = dotenvex.load({
             schema: '.env.schema.example',
             defaults: '.env.defaults.example',
             path: '.env.override',
@@ -109,8 +108,8 @@ describe('dotenv-extended tests', function () {
         expect(process.env.TEST_THREE).to.equal(undefined);
     });
 
-    it('Should pass regex validation when errorOnRegex is true and values match patterns', function () {
-        var runTest = function () {
+    it('Should pass regex validation when errorOnRegex is true and values match patterns', () => {
+        const runTest = () => {
             dotenvex.load({
                 schema: '.env.schema.regex',
                 path: '.env.override',
@@ -120,8 +119,8 @@ describe('dotenv-extended tests', function () {
         expect(runTest).not.to.throw(Error);
     });
 
-    it('Should throw a SyntaxError when a schema regex is invalid and errorOnRegex is true', function () {
-        var runTest = function () {
+    it('Should throw a SyntaxError when a schema regex is invalid and errorOnRegex is true', () => {
+        const runTest = () => {
             dotenvex.load({
                 schema: '.env.schema.regex-invalid',
                 errorOnRegex: true
@@ -130,8 +129,8 @@ describe('dotenv-extended tests', function () {
         expect(runTest).to.throw(SyntaxError);
     });
 
-    it('Should not throw a SyntaxError when a schema regex is invalid but errorOnRegex is false', function () {
-        var runTest = function () {
+    it('Should not throw a SyntaxError when a schema regex is invalid but errorOnRegex is false', () => {
+        const runTest = () => {
             dotenvex.load({
                 schema: '.env.schema.regex-invalid',
                 errorOnRegex: false
@@ -140,10 +139,10 @@ describe('dotenv-extended tests', function () {
         expect(runTest).not.to.throw(SyntaxError);
     });
 
-    it('Should throw an error when an item does not match schema regex and errorOnRegex is true', function () {
+    it('Should throw an error when an item does not match schema regex and errorOnRegex is true', () => {
         process.env.TEST_TWO = 'string with whitespace';
         process.env.TEST_THREE = '';
-        var runTest = function () {
+        const runTest = () => {
             dotenvex.load({
                 schema: '.env.schema.regex',
                 path: '.env.override',
@@ -161,7 +160,7 @@ describe('dotenv-extended tests', function () {
 });
 
 describe('Supporting libraries tests', () => {
-    beforeEach(function () {
+    beforeEach(() => {
         delete process.env.DOTENV_CONFIG_ENCODING;
         delete process.env.DOTENV_CONFIG_SILENT;
         delete process.env.DOTENV_CONFIG_PATH;
