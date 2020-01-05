@@ -45,10 +45,10 @@
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-eslint": "^6.0.0",
-    "mocha": "^6.2.2",
+    "mocha": "^7.0.0",
     "mockery": "^2.1.0",
     "nyc": "^15.0.0",
-    "sinon": "^8.0.1",
+    "sinon": "^8.0.2",
     "sinon-chai": "^3.4.0"
   },
   "dependencies": {
