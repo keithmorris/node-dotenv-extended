@@ -30,6 +30,9 @@ describe('dotenv-extended tests', () => {
         delete process.env.TEST_ONE;
         delete process.env.TEST_TWO;
         delete process.env.TEST_THREE;
+        delete process.env.DOTENV_CONFIG_PATH;
+        delete process.env.DOTENV_CONFIG_SCHEMA;
+        delete process.env.DOTENV_CONFIG_OVERRIDE_PROCESS_ENV;
     });
 
     it('Should load .env file into process.env and not override process.env properties by default', () => {
@@ -42,6 +45,15 @@ describe('dotenv-extended tests', () => {
         process.env.TEST_ONE = 'original';
         dotenvex.load({overrideProcessEnv: true});
         expect(process.env.TEST_ONE).to.equal('overridden');
+    });
+
+    it('Should load take configuration values from environment variables', () => {
+        process.env.TEST_ONE = 'original';
+        process.env.DOTENV_CONFIG_PATH = '.env.override';
+        process.env.DOTENV_CONFIG_SCHEMA = '.env.schema.example';
+        process.env.DOTENV_CONFIG_OVERRIDE_PROCESS_ENV = 'true';
+        dotenvex.load();
+        expect(process.env.TEST_ONE).to.equal('one overridden');
     });
 
     it('Should throw an error when items from schema are missing and errorOnMissing is true', () => {
