@@ -2,6 +2,7 @@
  * Created by Keith Morris on 2/9/16.
  */
 import dotenv from 'dotenv';
+import getConfigFromEnv from './utils/config-from-env';
 import fs from 'fs';
 
 function loadEnvironmentFile(path, encoding, silent) {
@@ -32,9 +33,10 @@ export const config = options => {
             includeProcessEnv: false,
             assignToProcessEnv: true,
             overrideProcessEnv: false
-        };
+        },
+        processEnvOptions = getConfigFromEnv(process.env);
 
-    options = Object.assign({}, defaultOptions, options);
+    options = Object.assign({}, defaultOptions, processEnvOptions, options);
 
     defaultsData = loadEnvironmentFile(options.defaults, options.encoding, options.silent);
     environmentData = loadEnvironmentFile(options.path, options.encoding, options.silent);
