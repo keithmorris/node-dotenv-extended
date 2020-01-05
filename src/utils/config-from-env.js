@@ -12,17 +12,3 @@ export const getConfigFromEnv = env => {
     return config;
 };
 export default getConfigFromEnv;
-
-// process.env.DOTENV_CONFIG_ENCODING = 'utf8';
-// process.env.DOTENV_CONFIG_SILENT = 'true';
-// process.env.DOTENV_CONFIG_PATH = '.env';
-// process.env.DOTENV_CONFIG_DEFAULTS = '.env.defaults';
-// process.env.DOTENV_CONFIG_SCHEMA = '.env.schema';
-// process.env.DOTENV_CONFIG_ERROR_ON_MISSING = 'false';
-// process.env.DOTENV_CONFIG_ERROR_ON_EXTRA = 'false';
-// process.env.DOTENV_CONFIG_ERROR_ON_REGEX = 'false';
-// process.env.DOTENV_CONFIG_INCLUDED_PROCESS_ENV = 'false';
-// process.env.DOTENV_CONFIG_ASSIGN_TO_PROCESS_ENV = 'true';
-// process.env.DOTENV_CONFIG_OVERRIDE_PROCESS_ENV = 'false';
-
-
