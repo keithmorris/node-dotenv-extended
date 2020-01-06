@@ -41,7 +41,7 @@
     "gulp-babel": "7.0.1",
     "gulp-eslint": "^5.0.0",
     "mocha": "^6.2.2",
-    "mockery": "^2.0.0",
+    "mockery": "^2.1.0",
     "nyc": "^14.1.1",
     "sinon": "^8.0.4",
     "sinon-chai": "^3.4.0"
