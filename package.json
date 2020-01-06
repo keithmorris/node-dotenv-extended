@@ -43,8 +43,8 @@
     "mocha": "^6.2.2",
     "mockery": "^2.0.0",
     "nyc": "^14.1.1",
-    "sinon": "^7.5.0",
-    "sinon-chai": "^3.3.0"
+    "sinon": "^8.0.4",
+    "sinon-chai": "^3.4.0"
   },
   "dependencies": {
     "@types/dotenv": "^6.1.1",
