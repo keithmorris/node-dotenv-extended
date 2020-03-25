@@ -3,19 +3,7 @@
  */
 import dotenv from 'dotenv';
 import getConfigFromEnv from './utils/config-from-env';
-import fs from 'fs';
-
-function loadEnvironmentFile(path, encoding, silent) {
-    try {
-        const data = fs.readFileSync(path, encoding);
-        return dotenv.parse(data);
-    } catch (err) {
-        if (!silent) {
-            console.error(err.message);
-        }
-        return {};
-    }
-}
+import loadEnvironmentFile from './utils/load-environment-file';
 
 export const parse = dotenv.parse.bind(dotenv);
 export const config = options => {
