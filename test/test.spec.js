@@ -222,7 +222,7 @@ describe('Supporting libraries tests', () => {
         expect(parsed[2]).to.eql(['--jump', '--dive=true', 'I was here']);
     });
 
-    it('getConfigFromEnv should parse command line arguments correctly', () => {
+    it('getConfigFromEnv should parse environment variable config values correctly', () => {
         const expected = {
             encoding: 'utf8',
             silent: true,
