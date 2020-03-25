@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.8.0 - 2020.03.25
+- Update dependencies while retaining compatibility with Node 6
+- Add ability to configure through environment variables (thanks @Levino)
+- Remove `@types/dotenv` as a dependency
+- Add Node 12 to travis-ci tests
+- General code cleanup/modernizing
+
 ## 2.7.1 - 2019.12.30
 - Update README to include `import` syntax
 
