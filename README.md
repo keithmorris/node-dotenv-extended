@@ -45,7 +45,7 @@ I have tried to stay as compatible as possible with the [dotenv] library but the
 
 ## Installation
 
-```
+```bash
 npm i --save dotenv-extended
 ```
 
@@ -53,13 +53,13 @@ npm i --save dotenv-extended
 
 As early as possible in your main script:
 
-```
+```javascript
 require('dotenv-extended').load();
 ```
 
 Or if you prefer import syntax:
 
-```
+```javascript
 import dotEnvExtended from 'dotenv-extended';
 dotEnvExtended.load(); 
 ```
@@ -87,13 +87,14 @@ mongoose.connect('mongodb://' + process.env.MONGO_HOST + '/' + process.env.MONGO
 ### Load Configs from command line
 
 You may also load the `.env` files from the command line. Add in the require `dotenv-extended/config` along with any of the options that the `load` method takes prefixed with `dotenv_config_`. e.g.:
-```
+
+```bash
 node -r dotenv-extended/config your_script.js
 ```
 
 Or to specify load options:
 
-```
+```bash
 node -r dotenv-extended/config your_script.js dotenv_config_path=./env/.env dotenv_config_defaults=./env/.env.defaults
 ```
 
@@ -103,19 +104,19 @@ New in 2.0.0, is a feature inspired by [cross-env](https://www.npmjs.com/package
 
 Install Globally:
 
-```
+```bash
 npm install -g dotenv-extended
 ```
 
 Now call your shell scripts through `dotenv-extended` (this uses the defaults):
 
-```
+```bash
 dotenv-extended ./myshellscript.sh --whatever-flags-my-script-takes
 ```
 
 Configure `dotenv-extended` by passing any of the dotenv-extended options before your command. Preceed each option with two dashes `--`:
 
-```
+```bash
 dotenv-extended --path=/path/to/.env --defaults=/path/to/.env.defaults --errorOnMissing=true ./myshellscript.sh --whatever-flags-my-script-takes
 ```
 
@@ -139,7 +140,7 @@ The following are the flags you can pass to the `dotenv-extended` cli with their
 
 Defaults are shown below:
 
-```
+```javascript
 require('dotenv-extended').load({
 	encoding: 'utf8',
 	silent: true,
@@ -154,11 +155,28 @@ require('dotenv-extended').load({
 	overrideProcessEnv: false
 });
 ```
+### Configure via Environment Variables (New in 2.8.0)
 
-The function always returns an object containing the variables loaded from the `.env` and `.env.defaults` files. The returned object does not contain the properties held in `process.env` but rather only the ones that are loaded from the `.env` and `.env.defaults` files.
+You may also set the configuration values via environment variables loaded from `process.env` shown below with defaults:
 
 ```
-var myConfig = require('dotenv-extended').load();
+DOTENV_CONFIG_ENCODING=utf8
+DOTENV_CONFIG_SILENT=true
+DOTENV_CONFIG_PATH=.env
+DOTENV_CONFIG_DEFAULTS=.env.defaults
+DOTENV_CONFIG_SCHEMA=.env.schema
+DOTENV_CONFIG_ERROR_ON_MISSING=false
+DOTENV_CONFIG_ERROR_ON_EXTRA=false
+DOTENV_CONFIG_ERROR_ON_REGEX=false
+DOTENV_CONFIG_INCLUDE_PROCESS_ENV=false
+DOTENV_CONFIG_ASSIGN_TO_PROCESS_ENV=true
+DOTENV_CONFIG_OVERRIDE_PROCESS_ENV=false
+```
+
+The `load()` function always returns an object containing the variables loaded from the `.env` and `.env.defaults` files. By default the returned object does not contain the properties held in `process.env` but rather only the ones that are loaded from the `.env` and `.env.defaults` files.
+
+```javascript
+const myConfig = require('dotenv-extended').load();
 ```
 
 ### encoding (_default: utf8_)
@@ -234,8 +252,8 @@ API_KEY=
 
 ### Load files with default options
 
-```
-var myConfig = require('dotenv-extended').load();
+```javascript
+const myConfig = require('dotenv-extended').load();
 
 myConfig.DB_HOST === process.env.DB_HOST === "localhost"
 myConfig.DB_USER === process.env.DB_USER === "databaseuser-local"
@@ -246,32 +264,32 @@ myConfig.SHARE_URL === process.env.SHARE_URL === "http://www.example.com"
 
 ### Load files with `errorOnMissing`
 
-```
-var myConfig = require('dotenv-extended').load({
+```javascript
+const myConfig = require('dotenv-extended').load({
     errorOnMissing: true
 });
 
-Throws ERROR `MISSING CONFIG VALUES: API_KEY`
+// Throws ERROR `MISSING CONFIG VALUES: API_KEY`
 ```
 
 ### Load files with `errorOnExtra`
 
-```
-var myConfig = require('dotenv-extended').load({
+```javascript
+const myConfig = require('dotenv-extended').load({
     errorOnExtra: true
 });
 
-Throws ERROR `EXTRA CONFIG VALUES: SHARE_URL`
+// Throws ERROR `EXTRA CONFIG VALUES: SHARE_URL`
 ```
 
 ### Load files with `errorOnRegex`
 
-```
-var myConfig = require('dotenv-extended').load({
+```javascript
+const myConfig = require('dotenv-extended').load({
     errorOnRegex: true
 });
 
-Throws ERROR `REGEX MISMATCH: DB_USER`
+// Throws ERROR `REGEX MISMATCH: DB_USER`
 ```
 
 ## Contributing

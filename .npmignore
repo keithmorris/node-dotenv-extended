@@ -7,4 +7,4 @@ test
 .eslintrc
 .gitignore
 .travis.yml
-gulpfile.js
+gulpfile.esm.js
