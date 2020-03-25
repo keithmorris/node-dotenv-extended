@@ -10,7 +10,7 @@
     "node": ">=6"
   },
   "scripts": {
-    "test": "npm run build && cd test && nyc --reporter=lcovonly mocha --require babel-register *.spec.js",
+    "test": "npm run build && cd test && nyc --reporter=lcovonly mocha --require esm *.spec.js",
     "report": "nyc report",
     "coveralls": "npm run report -- --reporter=text-lcov | coveralls",
     "lint": "gulp lint",
@@ -24,27 +24,27 @@
   "author": "Keith Morris <standupbass@gmail.com> (http://standupbass.wordpress.com/)",
   "license": "MIT",
   "devDependencies": {
-    "babel-core": "^6.26.3",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
     "babel-eslint": "8.2.6",
-    "babel-plugin-transform-object-rest-spread": "^6.8.0",
-    "babel-preset-env": "^1.7.0",
     "chai": "^4.2.0",
     "coveralls": "^3.0.7",
-    "del": "3.0.0",
+    "del": "^4.1.1",
     "eslint": "^5.3.0",
     "eslint-config-standard": "11.0.0",
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
+    "esm": "^3.2.25",
     "gulp": "^4.0.2",
-    "gulp-babel": "7.0.1",
+    "gulp-babel": "^8.0.0",
     "gulp-eslint": "^5.0.0",
     "mocha": "^6.2.2",
     "mockery": "^2.1.0",
     "nyc": "^14.1.1",
-    "sinon": "^8.0.4",
-    "sinon-chai": "^3.4.0"
+    "sinon": "^9.0.1",
+    "sinon-chai": "^3.5.0"
   },
   "dependencies": {
     "@types/dotenv": "^6.1.1",
