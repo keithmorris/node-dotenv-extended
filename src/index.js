@@ -2,11 +2,12 @@
  * Created by Keith Morris on 2/9/16.
  */
 import dotenv from 'dotenv';
+import getConfigFromEnv from './utils/config-from-env';
 import fs from 'fs';
 
 function loadEnvironmentFile(path, encoding, silent) {
     try {
-        var data = fs.readFileSync(path, encoding);
+        const data = fs.readFileSync(path, encoding);
         return dotenv.parse(data);
     } catch (err) {
         if (!silent) {
@@ -15,10 +16,11 @@ function loadEnvironmentFile(path, encoding, silent) {
         return {};
     }
 }
+
 export const parse = dotenv.parse.bind(dotenv);
 export const config = options => {
 
-    var defaultsData, environmentData,
+    let defaultsData, environmentData,
         defaultOptions = {
             encoding: 'utf8',
             silent: true,
@@ -31,9 +33,10 @@ export const config = options => {
             includeProcessEnv: false,
             assignToProcessEnv: true,
             overrideProcessEnv: false
-        };
+        },
+        processEnvOptions = getConfigFromEnv(process.env);
 
-    options = Object.assign({}, defaultOptions, options);
+    options = Object.assign({}, defaultOptions, processEnvOptions, options);
 
     defaultsData = loadEnvironmentFile(options.defaults, options.encoding, options.silent);
     environmentData = loadEnvironmentFile(options.path, options.encoding, options.silent);
@@ -76,7 +79,7 @@ export const config = options => {
 
     // the returned configData object should include process.env that override
     if (options.includeProcessEnv && !options.overrideProcessEnv) {
-        for (let i=0; i<configKeys.length; i++) {
+        for (let i = 0; i < configKeys.length; i++) {
             if (typeof process.env[configKeys[i]] !== 'undefined')
                 configData[configKeys[i]] = process.env[configKeys[i]];
         }
