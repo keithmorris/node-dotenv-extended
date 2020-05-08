@@ -4,6 +4,7 @@
 import dotenv from 'dotenv';
 import getConfigFromEnv from './utils/config-from-env';
 import loadEnvironmentFile from './utils/load-environment-file';
+import loadEnvTypeDeclaration from './utils/load-env-type-declaration';
 
 export const parse = dotenv.parse.bind(dotenv);
 export const config = options => {
@@ -35,7 +36,9 @@ export const config = options => {
     const configKeys = Object.keys(config);
 
     if (options.errorOnMissing || options.errorOnExtra || options.errorOnRegex) {
-        const schema = loadEnvironmentFile(options.schema, options.encoding, options.silent);
+        const schema = options.schema.endsWith('.d.ts') ? 
+            loadEnvTypeDeclaration(options.schema, options.encoding, options.silent)
+            : loadEnvironmentFile(options.schema, options.encoding, options.silent);
         const schemaKeys = Object.keys(schema);
 
         let missingKeys = schemaKeys.filter(function (key) {
