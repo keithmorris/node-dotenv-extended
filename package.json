@@ -1,6 +1,6 @@
 {
   "name": "dotenv-extended",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "A module for loading .env files and optionally loading defaults and a schema for validating all values are present.",
   "repository": "git@github.com:keithmorris/node-dotenv-extended.git",
   "main": "lib/index.js",
@@ -28,6 +28,8 @@
     "@babel/preset-env": "^7.9.0",
     "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
+    "@types/sinon": "^9.0.0",
+    "@types/sinon-chai": "^3.2.4",
     "babel-eslint": "8.2.6",
     "chai": "^4.2.0",
     "coveralls": "^3.0.7",

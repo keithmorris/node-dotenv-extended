@@ -1,11 +1,11 @@
 import {config} from './index';
 
-function reduceArguments(prev, curr) {
+const reduceArguments = (prev, curr) => {
     const matches = curr.match(/^dotenv_config_(.+)=(.+)/);
     return hasMatches(matches)
         ? expandKeyValFromMatches(matches, prev)
         : prev;
-}
+};
 
 const expandKeyValFromMatches = ([, key, value], prev) => ({
     ...prev,

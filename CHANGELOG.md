@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.9.0 - 2020.09.30
+- Missing values in schema now default to empty strings for `errorOnRegex` (thanks @FokkeZB)
+- Minor modernization and refactoring of unit tests
+
 ## 2.8.0 - 2020.03.25
 - Update dependencies while retaining compatibility with Node 6
 - Add ability to configure through environment variables (thanks @Levino)

@@ -55,7 +55,7 @@ export const config = options => {
         if (options.errorOnRegex) {
             const regexMismatchKeys = schemaKeys.filter(function (key) {
                 if (schema[key]) {
-                    return !new RegExp(schema[key]).test(config[key]);
+                    return !new RegExp(schema[key]).test(typeof config[key] === 'string' ? config[key] : '');
                 }
             });
 
