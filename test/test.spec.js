@@ -4,10 +4,13 @@ import mockery from 'mockery';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
+import dotenvex from '../lib/index';
+import parseCommand from '../lib/utils/parse-command';
+import getConfigFromEnv from '../lib/utils/config-from-env';
+
 chai.use(sinonChai);
 
 describe('dotenv-extended tests', () => {
-    let dotenvex;
 
     before(() => {
         mockery.enable({
@@ -16,7 +19,6 @@ describe('dotenv-extended tests', () => {
             useCleanCache: true
         });
         sinon.stub(console, 'error');
-        dotenvex = require('../');
     });
 
     after(() => {
@@ -193,9 +195,6 @@ describe('Supporting libraries tests', () => {
         delete process.env.DOTENV_CONFIG_ASSIGN_TO_PROCESS_ENV;
         delete process.env.DOTENV_CONFIG_OVERRIDE_PROCESS_ENV;
     });
-
-    const parseCommand = require('../lib/utils/parse-command').parseCommand;
-    const getConfigFromEnv = require('../lib/utils/config-from-env').getConfigFromEnv;
     const cliArgs = [
         '--encoding=utf8',
         '--silent=true',
