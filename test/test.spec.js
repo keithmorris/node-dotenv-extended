@@ -163,6 +163,16 @@ describe('dotenv-extended tests', () => {
         expect(runTest).to.throw('REGEX MISMATCH: TEST_TWO, TEST_THREE');
     });
 
+    it('Should default missing values to empty string when errorOnRegex is true', () => {
+        const runTest = () => {
+            dotenvex.load({
+                schema: '.env.schema.regex-optional',
+                errorOnRegex: true,
+            });
+        };
+        expect(runTest).to.throw('REGEX MISMATCH: TEST_MISSING_REQUIRED');
+    });
+
     it('Should log an error when silent is set to false and .env.defaults is missing', function () {
         dotenvex.load({silent: false});
         expect(console.error).to.have.been.calledOnce;
