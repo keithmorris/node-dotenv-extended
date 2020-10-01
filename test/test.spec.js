@@ -179,6 +179,22 @@ describe('dotenv-extended tests', () => {
         dotenvex.load({silent: false});
         expect(console.error).to.have.been.calledOnce;
     });
+
+    it('Should load .d.ts schema, defaults and env into correct values in process.env and returned object', function () {
+        const config = dotenvex.load({
+            schema: 'EnvSchema.d.ts',
+            defaults: '.env.defaults.example',
+            path: '.env.override',
+            errorOnExtra: true,
+            errorOnMissing: true
+        });
+        expect(config.TEST_ONE).to.equal('one overridden');
+        expect(config.TEST_TWO).to.equal('two');
+        expect(config.TEST_THREE).to.equal('three');
+        expect(process.env.TEST_ONE).to.equal('one overridden');
+        expect(process.env.TEST_TWO).to.equal('two');
+        expect(process.env.TEST_THREE).to.equal('three');
+    });
 });
 
 describe('Supporting libraries tests', () => {

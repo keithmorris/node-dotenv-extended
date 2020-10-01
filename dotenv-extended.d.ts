@@ -4,7 +4,7 @@
  * The result of a call to load() or parse()
  */
 export interface IEnvironmentMap {
-    [name: string]: string;
+    [name: string]: string | undefined;
 }
 
 /**
