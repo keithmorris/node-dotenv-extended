@@ -8,8 +8,7 @@ import loadEnvironmentFile from './utils/load-environment-file';
 export const parse = dotenv.parse.bind(dotenv);
 export const config = options => {
 
-    let defaultsData, environmentData,
-        defaultOptions = {
+    let defaultOptions = {
             encoding: 'utf8',
             silent: true,
             path: '.env',
@@ -26,10 +25,17 @@ export const config = options => {
 
     options = Object.assign({}, defaultOptions, processEnvOptions, options);
 
-    defaultsData = loadEnvironmentFile(options.defaults, options.encoding, options.silent);
-    environmentData = loadEnvironmentFile(options.path, options.encoding, options.silent);
-
-    let configData = Object.assign({}, defaultsData, environmentData);
+    let envFiles = [];
+    [ options.defaults, options.path ].forEach(files => {
+      if (!files || files.length === 0) return;
+      if (!Array.isArray(files)) files = [ files ];
+      envFiles.push(...files);
+    });
+    let configData = files.reduce((accumulator, file) => {
+      let fileData = loadEnvironmentFile(file, options.encoding, options.silent);
+      return { ...accumulator, ...fileData };
+    });
+    
     const config = options.includeProcessEnv ? Object.assign({}, configData, process.env) : configData;
     const configOnlyKeys = Object.keys(configData);
     const configKeys = Object.keys(config);
