@@ -27,13 +27,13 @@ export const config = options => {
 
     let envFiles = [];
     [ options.defaults, options.path ].forEach(files => {
-      if (!files || files.length === 0) return;
-      if (!Array.isArray(files)) files = [ files ];
-      envFiles.push(...files);
+        if (!files || files.length === 0) return;
+        if (!Array.isArray(files)) files = [ files ];
+        envFiles.push(...files);
     });
-    let configData = files.reduce((accumulator, file) => {
-      let fileData = loadEnvironmentFile(file, options.encoding, options.silent);
-      return { ...accumulator, ...fileData };
+    let configData = envFiles.reduce((accumulator, file) => {
+        let fileData = loadEnvironmentFile(file, options.encoding, options.silent);
+        return { ...accumulator, ...fileData };
     });
     
     const config = options.includeProcessEnv ? Object.assign({}, configData, process.env) : configData;
