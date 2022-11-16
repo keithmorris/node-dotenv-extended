@@ -13,8 +13,6 @@ export const config = options => {
             encoding: 'utf8',
             silent: true,
             path: '.env',
-            defaults: '.env.defaults',
-            schema: '.env.schema',
             errorOnMissing: false,
             errorOnExtra: false,
             errorOnRegex: false,
@@ -25,7 +23,9 @@ export const config = options => {
         processEnvOptions = getConfigFromEnv(process.env);
 
     options = Object.assign({}, defaultOptions, processEnvOptions, options);
-
+    if (!options.defaults) options.defaults = options.path + '.defaults';
+    if (!options.schema) options.schema = options.path + '.schema';
+  
     defaultsData = loadEnvironmentFile(options.defaults, options.encoding, options.silent);
     environmentData = loadEnvironmentFile(options.path, options.encoding, options.silent);
 
