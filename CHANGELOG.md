@@ -3,15 +3,15 @@
 ## 3.1.0 - 2026-02-13
 
 - Add layered env file support for `path` and `defaults`:
-  - Accept `string | string[]` in code
-  - Accept comma-separated values via `DOTENV_CONFIG_PATH` and `DOTENV_CONFIG_DEFAULTS`
-  - Deterministic merge order with last layer wins
+    - Accept `string | string[]` in code
+    - Accept comma-separated values via `DOTENV_CONFIG_PATH` and `DOTENV_CONFIG_DEFAULTS`
+    - Deterministic merge order with last layer wins
 - Add layered schema support with `schemaExtends` (`string | string[]` or comma-separated env var)
 - Add `returnSchemaOnly` option to return only schema-defined keys
 - Add `errorOnMissingFiles` option for strict missing-file errors
 - Add CLI print mode:
-  - `--print` for JSON output
-  - `--print=dotenv` for `KEY=value` output
+    - `--print` for JSON output
+    - `--print=dotenv` for `KEY=value` output
 - Add `dee` CLI alias while preserving `dotenv-extended` command compatibility
 - Expand tests for new config/CLI behavior and maintain full coverage
 - Update README documentation for new options and layered-file usage
