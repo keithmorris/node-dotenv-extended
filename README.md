@@ -147,6 +147,15 @@ Configure `dee` (or `dotenv-extended`) by passing any of the dotenv-extended opt
 dee --path=/path/to/.env --defaults=/path/to/.env.defaults --errorOnMissing=true ./myshellscript.sh --whatever-flags-my-script-takes
 ```
 
+`--path` and `--defaults` also support comma-separated layered files:
+
+```bash
+dee \
+  --defaults=./env/.env.defaults.base,./env/.env.defaults.local \
+  --path=./env/.env.base,./env/.env.development \
+  ./myshellscript.sh
+```
+
 You can also print the merged dotenv configuration (without full `process.env`) instead of executing a command:
 
 ```bash
@@ -217,6 +226,8 @@ DOTENV_CONFIG_ASSIGN_TO_PROCESS_ENV=true
 DOTENV_CONFIG_OVERRIDE_PROCESS_ENV=false
 ```
 
+`DOTENV_CONFIG_PATH`, `DOTENV_CONFIG_DEFAULTS`, and `DOTENV_CONFIG_SCHEMA_EXTENDS` can each be set to comma-separated file paths for layered loading.
+
 The `load()` function always returns an object containing the variables loaded from the `.env` and `.env.defaults` files. By default the returned object does not contain the properties held in `process.env` but rather only the ones that are loaded from the `.env` and `.env.defaults` files.
 
 ```javascript
@@ -235,9 +246,24 @@ Sets whether a log message is shown when missing the `.env` or `.env.defaults` f
 
 The main `.env` file that contains your variables.
 
+- Accepts `string` or `string[]` in code.
+- Accepts comma-separated paths via environment variable:
+    - `DOTENV_CONFIG_PATH=./.env.base,./.env.dev`
+- Merge order is deterministic:
+    - load each `path` entry in order
+    - later entries override earlier keys
+
 ### defaults (_default: .env.defaults_)
 
 The file that default values are loaded from.
+
+- Accepts `string` or `string[]` in code.
+- Accepts comma-separated paths via environment variable:
+    - `DOTENV_CONFIG_DEFAULTS=./.env.defaults.base,./.env.defaults.shared`
+- Merge order is deterministic:
+    - load each `defaults` entry in order
+    - later entries override earlier keys
+    - `path` layers are applied after all `defaults` layers, so `path` still overrides `defaults`
 
 ### schema (_default: .env.schema_)
 
@@ -286,6 +312,31 @@ Sets whether the loaded values are assigned to the `process.env` object. If this
 ### overrideProcessEnv (_default: false_)
 
 By defaut, `dotenv-entended` will not overwrite any varibles that are already set in the `process.env` object. If you would like to enable overwriting any already existing values, set this value to `true`.
+
+### Layered File Precedence
+
+When using multiple files, merge precedence is:
+
+1. `defaults` layers in order (last wins)
+2. `path` layers in order (last wins)
+3. `process.env` values, if `includeProcessEnv` is true and `overrideProcessEnv` is false
+
+Example:
+
+```javascript
+const config = require('dotenv-extended').load({
+    defaults: ['./env/.env.defaults.base', './env/.env.defaults.region'],
+    path: ['./env/.env.base', './env/.env.production'],
+});
+```
+
+Equivalent via environment variables:
+
+```bash
+DOTENV_CONFIG_DEFAULTS=./env/.env.defaults.base,./env/.env.defaults.region \
+DOTENV_CONFIG_PATH=./env/.env.base,./env/.env.production \
+node app.js
+```
 
 ## Examples
 

@@ -27,17 +27,19 @@ export interface IDotenvExtendedOptions {
 
     /**
      * Path to the main .env file that contains your variables.
+     * Can be a string path or layered string[] where later entries override earlier ones.
      *
      * @default '.env'
      */
-    path?: string;
+    path?: string | string[];
 
     /**
      * The path to the file that default values are loaded from.
+     * Can be a string path or layered string[] where later entries override earlier ones.
      *
      * @default '.env.defaults'
      */
-    defaults?: string;
+    defaults?: string | string[];
 
     /**
      * The path to the file that contains the schema of what values should be available

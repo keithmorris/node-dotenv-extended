@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import getConfigFromEnv from './utils/config-from-env';
 import loadEnvironmentFile from './utils/load-environment-file';
 
-const normalizeSchemaExtends = (value) => {
+const normalizeLayeredFiles = (value) => {
     if (!value) {
         return [];
     }
@@ -23,6 +23,17 @@ const normalizeSchemaExtends = (value) => {
 
     return [];
 };
+
+const loadLayeredFiles = (files, options) =>
+    normalizeLayeredFiles(files).reduce((acc, filePath) => {
+        const fileData = loadEnvironmentFile(
+            filePath,
+            options.encoding,
+            options.silent,
+            options.errorOnMissingFiles
+        );
+        return Object.assign(acc, fileData);
+    }, {});
 
 export const parse = dotenv.parse.bind(dotenv);
 export const config = (options) => {
@@ -48,18 +59,8 @@ export const config = (options) => {
 
     options = Object.assign({}, defaultOptions, processEnvOptions, options);
 
-    defaultsData = loadEnvironmentFile(
-        options.defaults,
-        options.encoding,
-        options.silent,
-        options.errorOnMissingFiles
-    );
-    environmentData = loadEnvironmentFile(
-        options.path,
-        options.encoding,
-        options.silent,
-        options.errorOnMissingFiles
-    );
+    defaultsData = loadLayeredFiles(options.defaults, options);
+    environmentData = loadLayeredFiles(options.path, options);
 
     let configData = Object.assign({}, defaultsData, environmentData);
     const config = options.includeProcessEnv
@@ -82,7 +83,7 @@ export const config = (options) => {
             options.silent,
             options.errorOnMissingFiles
         );
-        const schema = normalizeSchemaExtends(options.schemaExtends).reduce(
+        const schema = normalizeLayeredFiles(options.schemaExtends).reduce(
             (acc, schemaPath) => {
                 const schemaLayer = loadEnvironmentFile(
                     schemaPath,

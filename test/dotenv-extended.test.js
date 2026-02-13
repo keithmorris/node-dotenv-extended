@@ -305,6 +305,68 @@ describe('dotenv-extended public API', () => {
         expect(runTest).not.toThrow();
     });
 
+    it('supports layered defaults array with last wins', () => {
+        const config = dotenvex.load({
+            defaults: [fixture('.env.defaults.layer-one'), fixture('.env.defaults.layer-two')],
+            path: fixture('.env.missing'),
+            assignToProcessEnv: false,
+        });
+
+        expect(config).toMatchObject({
+            TEST_ONE: 'one-default',
+            TEST_TWO: 'two',
+            TEST_THREE: 'three-default',
+        });
+    });
+
+    it('supports layered path array with last wins', () => {
+        const config = dotenvex.load({
+            path: [fixture('.env.path.layer-one'), fixture('.env.path.layer-two')],
+            defaults: fixture('.env.defaults.example'),
+            assignToProcessEnv: false,
+        });
+
+        expect(config).toMatchObject({
+            TEST_ONE: 'one-path',
+            TEST_TWO: 'two-path-2',
+            TEST_FOUR: 'four-path',
+        });
+    });
+
+    it('supports combined layered defaults and layered path precedence', () => {
+        const config = dotenvex.load({
+            defaults: [fixture('.env.defaults.layer-one'), fixture('.env.defaults.layer-two')],
+            path: [fixture('.env.path.layer-one'), fixture('.env.path.layer-two')],
+            assignToProcessEnv: false,
+        });
+
+        expect(config).toEqual({
+            TEST_ONE: 'one-path',
+            TEST_TWO: 'two-path-2',
+            TEST_THREE: 'three-default',
+            TEST_FOUR: 'four-path',
+        });
+    });
+
+    it('supports comma-separated DOTENV_CONFIG_PATH and DOTENV_CONFIG_DEFAULTS', () => {
+        process.env.DOTENV_CONFIG_DEFAULTS = [
+            fixture('.env.defaults.layer-one'),
+            fixture('.env.defaults.layer-two'),
+        ].join(',');
+        process.env.DOTENV_CONFIG_PATH = [
+            fixture('.env.path.layer-one'),
+            fixture('.env.path.layer-two'),
+        ].join(',');
+
+        const config = dotenvex.load({ assignToProcessEnv: false });
+        expect(config).toEqual({
+            TEST_ONE: 'one-path',
+            TEST_TWO: 'two-path-2',
+            TEST_THREE: 'three-default',
+            TEST_FOUR: 'four-path',
+        });
+    });
+
     it('supports DOTENV_CONFIG_SCHEMA_EXTENDS from environment', () => {
         process.env.DOTENV_CONFIG_SCHEMA = fixture('.env.schema.example');
         process.env.DOTENV_CONFIG_SCHEMA_EXTENDS = fixture('.env.schema.extend-four');
