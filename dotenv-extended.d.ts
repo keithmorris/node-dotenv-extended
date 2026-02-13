@@ -72,6 +72,14 @@ export interface IDotenvExtendedOptions {
     errorOnRegex?: boolean;
 
     /**
+     * Causes the library to throw when a configured dotenv file path cannot be found.
+     * Applies to `path`, `defaults`, and `schema` when they are loaded.
+     *
+     * @default false
+     */
+    errorOnMissingFiles?: boolean;
+
+    /**
      * Causes the library add process.env variables to error checking. The variables in process.env overrides the
      * variables in .env and .env.defaults while checking
      *
@@ -81,8 +89,7 @@ export interface IDotenvExtendedOptions {
 
     /**
      * Sets whether the loaded values are assigned to the process.env object.
-     * If this is set, you must capture the return value of the call to .load() or you will not be
-     * able to use your variables.
+     * If this is false, values are only available from the returned object.
      *
      * @default true
      */

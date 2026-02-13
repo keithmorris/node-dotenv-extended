@@ -18,6 +18,7 @@ export const config = (options) => {
             errorOnMissing: false,
             errorOnExtra: false,
             errorOnRegex: false,
+            errorOnMissingFiles: false,
             includeProcessEnv: false,
             assignToProcessEnv: true,
             overrideProcessEnv: false,
@@ -26,8 +27,18 @@ export const config = (options) => {
 
     options = Object.assign({}, defaultOptions, processEnvOptions, options);
 
-    defaultsData = loadEnvironmentFile(options.defaults, options.encoding, options.silent);
-    environmentData = loadEnvironmentFile(options.path, options.encoding, options.silent);
+    defaultsData = loadEnvironmentFile(
+        options.defaults,
+        options.encoding,
+        options.silent,
+        options.errorOnMissingFiles
+    );
+    environmentData = loadEnvironmentFile(
+        options.path,
+        options.encoding,
+        options.silent,
+        options.errorOnMissingFiles
+    );
 
     let configData = Object.assign({}, defaultsData, environmentData);
     const config = options.includeProcessEnv
@@ -37,7 +48,12 @@ export const config = (options) => {
     const configKeys = Object.keys(config);
 
     if (options.errorOnMissing || options.errorOnExtra || options.errorOnRegex) {
-        const schema = loadEnvironmentFile(options.schema, options.encoding, options.silent);
+        const schema = loadEnvironmentFile(
+            options.schema,
+            options.encoding,
+            options.silent,
+            options.errorOnMissingFiles
+        );
         const schemaKeys = Object.keys(schema);
 
         let missingKeys = schemaKeys.filter(function (key) {

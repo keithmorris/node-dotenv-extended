@@ -26,6 +26,7 @@ const resetEnvKeys = () => {
     delete process.env.DOTENV_CONFIG_ERROR_ON_MISSING;
     delete process.env.DOTENV_CONFIG_ERROR_ON_EXTRA;
     delete process.env.DOTENV_CONFIG_ERROR_ON_REGEX;
+    delete process.env.DOTENV_CONFIG_ERROR_ON_MISSING_FILES;
     delete process.env.DOTENV_CONFIG_INCLUDE_PROCESS_ENV;
     delete process.env.DOTENV_CONFIG_INCLUDED_PROCESS_ENV;
     delete process.env.DOTENV_CONFIG_ASSIGN_TO_PROCESS_ENV;
@@ -213,6 +214,24 @@ describe('dotenv-extended public API', () => {
 
         expect(spy).toHaveBeenCalledOnce();
         spy.mockRestore();
+    });
+
+    it('throws when a configured file is missing and errorOnMissingFiles is true', () => {
+        const runTest = () =>
+            dotenvex.load({
+                path: fixture('.env.this-file-does-not-exist'),
+                errorOnMissingFiles: true,
+            });
+
+        expect(runTest).toThrow('MISSING CONFIG FILE:');
+    });
+
+    it('supports DOTENV_CONFIG_ERROR_ON_MISSING_FILES from environment', () => {
+        process.env.DOTENV_CONFIG_PATH = fixture('.env.this-file-does-not-exist');
+        process.env.DOTENV_CONFIG_ERROR_ON_MISSING_FILES = 'true';
+
+        const runTest = () => dotenvex.load();
+        expect(runTest).toThrow('MISSING CONFIG FILE:');
     });
 });
 
