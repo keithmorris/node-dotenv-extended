@@ -15,6 +15,7 @@
 ```
 npm test
 ```
+
 or
 
 ```
@@ -26,6 +27,7 @@ gulp unittest
 ```
 npm run lint
 ```
+
 or
 
 ```
