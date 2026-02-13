@@ -28,6 +28,7 @@ const resetEnvKeys = () => {
     delete process.env.DOTENV_CONFIG_ERROR_ON_REGEX;
     delete process.env.DOTENV_CONFIG_ERROR_ON_MISSING_FILES;
     delete process.env.DOTENV_CONFIG_INCLUDE_PROCESS_ENV;
+    delete process.env.DOTENV_CONFIG_RETURN_SCHEMA_ONLY;
     delete process.env.DOTENV_CONFIG_INCLUDED_PROCESS_ENV;
     delete process.env.DOTENV_CONFIG_ASSIGN_TO_PROCESS_ENV;
     delete process.env.DOTENV_CONFIG_OVERRIDE_PROCESS_ENV;
@@ -232,6 +233,40 @@ describe('dotenv-extended public API', () => {
 
         const runTest = () => dotenvex.load();
         expect(runTest).toThrow('MISSING CONFIG FILE:');
+    });
+
+    it('returns only schema keys when returnSchemaOnly is true', () => {
+        const config = dotenvex.load({
+            schema: fixture('.env.schema.example'),
+            defaults: fixture('.env.defaults.example'),
+            path: fixture('.env.override'),
+            includeProcessEnv: true,
+            returnSchemaOnly: true,
+            assignToProcessEnv: false,
+        });
+
+        expect(config).toEqual({
+            TEST_ONE: 'one overridden',
+            TEST_TWO: 'two',
+            TEST_THREE: 'three',
+        });
+        expect(config.PATH).toBeUndefined();
+        expect(config.TERM).toBeUndefined();
+    });
+
+    it('supports DOTENV_CONFIG_RETURN_SCHEMA_ONLY from environment', () => {
+        process.env.DOTENV_CONFIG_SCHEMA = fixture('.env.schema.example');
+        process.env.DOTENV_CONFIG_DEFAULTS = fixture('.env.defaults.example');
+        process.env.DOTENV_CONFIG_PATH = fixture('.env.override');
+        process.env.DOTENV_CONFIG_INCLUDE_PROCESS_ENV = 'true';
+        process.env.DOTENV_CONFIG_RETURN_SCHEMA_ONLY = 'true';
+
+        const config = dotenvex.load({ assignToProcessEnv: false });
+        expect(config).toEqual({
+            TEST_ONE: 'one overridden',
+            TEST_TWO: 'two',
+            TEST_THREE: 'three',
+        });
     });
 });
 

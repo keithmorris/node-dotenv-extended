@@ -189,6 +189,7 @@ require('dotenv-extended').load({
     errorOnRegex: false,
     errorOnMissingFiles: false,
     includeProcessEnv: false,
+    returnSchemaOnly: false,
     assignToProcessEnv: true,
     overrideProcessEnv: false,
 });
@@ -209,6 +210,7 @@ DOTENV_CONFIG_ERROR_ON_EXTRA=false
 DOTENV_CONFIG_ERROR_ON_REGEX=false
 DOTENV_CONFIG_ERROR_ON_MISSING_FILES=false
 DOTENV_CONFIG_INCLUDE_PROCESS_ENV=false
+DOTENV_CONFIG_RETURN_SCHEMA_ONLY=false
 DOTENV_CONFIG_ASSIGN_TO_PROCESS_ENV=true
 DOTENV_CONFIG_OVERRIDE_PROCESS_ENV=false
 ```
@@ -258,6 +260,10 @@ Causes the library to throw a `MISSING CONFIG FILE` error when configured dotenv
 ### includeProcessEnv (_default: false_)
 
 Causes the library add process.env variables to error checking. The variables in process.env overrides the variables in .env and .env.defaults while checking
+
+### returnSchemaOnly (_default: false_)
+
+Causes the returned object to include only variables present in `.env.schema`. This is useful when using `includeProcessEnv` for validation but you only want schema-defined keys in the final result.
 
 ### assignToProcessEnv (_default: true_)
 

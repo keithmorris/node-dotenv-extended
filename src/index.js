@@ -19,6 +19,7 @@ export const config = (options) => {
             errorOnExtra: false,
             errorOnRegex: false,
             errorOnMissingFiles: false,
+            returnSchemaOnly: false,
             includeProcessEnv: false,
             assignToProcessEnv: true,
             overrideProcessEnv: false,
@@ -47,14 +48,21 @@ export const config = (options) => {
     const configOnlyKeys = Object.keys(configData);
     const configKeys = Object.keys(config);
 
-    if (options.errorOnMissing || options.errorOnExtra || options.errorOnRegex) {
+    let schemaKeys = null;
+
+    if (
+        options.errorOnMissing ||
+        options.errorOnExtra ||
+        options.errorOnRegex ||
+        options.returnSchemaOnly
+    ) {
         const schema = loadEnvironmentFile(
             options.schema,
             options.encoding,
             options.silent,
             options.errorOnMissingFiles
         );
-        const schemaKeys = Object.keys(schema);
+        schemaKeys = Object.keys(schema);
 
         let missingKeys = schemaKeys.filter(function (key) {
             return configKeys.indexOf(key) < 0;
@@ -91,6 +99,15 @@ export const config = (options) => {
             if (typeof process.env[configKeys[i]] !== 'undefined')
                 configData[configKeys[i]] = process.env[configKeys[i]];
         }
+    }
+
+    if (options.returnSchemaOnly && schemaKeys) {
+        configData = schemaKeys.reduce((acc, key) => {
+            if (typeof config[key] !== 'undefined') {
+                acc[key] = config[key];
+            }
+            return acc;
+        }, {});
     }
 
     if (options.assignToProcessEnv) {

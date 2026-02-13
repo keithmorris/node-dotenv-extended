@@ -88,6 +88,14 @@ export interface IDotenvExtendedOptions {
     includeProcessEnv?: boolean;
 
     /**
+     * Causes the returned object (and any process assignment) to include only variables present in the schema file.
+     * This is useful when `includeProcessEnv` is enabled for validation, but you only want schema-defined keys.
+     *
+     * @default false
+     */
+    returnSchemaOnly?: boolean;
+
+    /**
      * Sets whether the loaded values are assigned to the process.env object.
      * If this is false, values are only available from the returned object.
      *
