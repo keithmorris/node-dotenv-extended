@@ -16,20 +16,8 @@
 npm test
 ```
 
-or
-
-```
-gulp unittest
-```
-
 ## Code Style
 
 ```
 npm run lint
-```
-
-or
-
-```
-gulp lint
 ```

@@ -8,4 +8,3 @@ test
 eslint.config.cjs
 .gitignore
 .travis.yml
-gulpfile.esm.js
