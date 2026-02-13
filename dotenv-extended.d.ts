@@ -72,7 +72,7 @@ export interface IDotenvExtendedOptions {
     errorOnRegex?: boolean;
 
     /**
-     * Causes the library add process.env variables to error checking. The variables in process.env overrides the 
+     * Causes the library add process.env variables to error checking. The variables in process.env overrides the
      * variables in .env and .env.defaults while checking
      *
      * @default false

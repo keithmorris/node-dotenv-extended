@@ -6,9 +6,9 @@ import getConfigFromEnv from './utils/config-from-env';
 import loadEnvironmentFile from './utils/load-environment-file';
 
 export const parse = dotenv.parse.bind(dotenv);
-export const config = options => {
-
-    let defaultsData, environmentData,
+export const config = (options) => {
+    let defaultsData,
+        environmentData,
         defaultOptions = {
             encoding: 'utf8',
             silent: true,
@@ -20,7 +20,7 @@ export const config = options => {
             errorOnRegex: false,
             includeProcessEnv: false,
             assignToProcessEnv: true,
-            overrideProcessEnv: false
+            overrideProcessEnv: false,
         },
         processEnvOptions = getConfigFromEnv(process.env);
 
@@ -30,7 +30,9 @@ export const config = options => {
     environmentData = loadEnvironmentFile(options.path, options.encoding, options.silent);
 
     let configData = Object.assign({}, defaultsData, environmentData);
-    const config = options.includeProcessEnv ? Object.assign({}, configData, process.env) : configData;
+    const config = options.includeProcessEnv
+        ? Object.assign({}, configData, process.env)
+        : configData;
     const configOnlyKeys = Object.keys(configData);
     const configKeys = Object.keys(config);
 
@@ -55,7 +57,9 @@ export const config = options => {
         if (options.errorOnRegex) {
             const regexMismatchKeys = schemaKeys.filter(function (key) {
                 if (schema[key]) {
-                    return !new RegExp(schema[key]).test(typeof config[key] === 'string' ? config[key] : '');
+                    return !new RegExp(schema[key]).test(
+                        typeof config[key] === 'string' ? config[key] : ''
+                    );
                 }
             });
 
@@ -86,4 +90,4 @@ export const config = options => {
 
 export const load = config;
 
-export default {parse, config, load};
+export default { parse, config, load };
