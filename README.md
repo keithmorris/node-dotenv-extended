@@ -124,23 +124,47 @@ node -r dotenv-extended/config your_script.js dotenv_config_path=./env/.env dote
 
 New in 2.0.0, is a feature inspired by [cross-env](https://www.npmjs.com/package/cross-env) to allow you to load environment variables from your `.env` files and then pass them into a non-NodeJS script such as a shell script. This can simplify the process of maintaining variables used in both your Node app and other scripts. To use this command line executable, you will either need to install globally with the `-g` flag, or install `dotenv-extended` in your project and reference it from your npm scripts.
 
+The package exposes two equivalent CLI commands:
+
+- `dotenv-extended` (original)
+- `dee` (short alias)
+
 Install Globally:
 
 ```bash
 npm install -g dotenv-extended
 ```
 
-Now call your shell scripts through `dotenv-extended` (this uses the defaults):
+Now call your shell scripts through `dee` (this uses the defaults):
 
 ```bash
-dotenv-extended ./myshellscript.sh --whatever-flags-my-script-takes
+dee ./myshellscript.sh --whatever-flags-my-script-takes
 ```
 
-Configure `dotenv-extended` by passing any of the dotenv-extended options before your command. Preceed each option with two dashes `--`:
+Configure `dee` (or `dotenv-extended`) by passing any of the dotenv-extended options before your command. Preceed each option with two dashes `--`:
 
 ```bash
-dotenv-extended --path=/path/to/.env --defaults=/path/to/.env.defaults --errorOnMissing=true ./myshellscript.sh --whatever-flags-my-script-takes
+dee --path=/path/to/.env --defaults=/path/to/.env.defaults --errorOnMissing=true ./myshellscript.sh --whatever-flags-my-script-takes
 ```
+
+`--path` and `--defaults` also support comma-separated layered files:
+
+```bash
+dee \
+  --defaults=./env/.env.defaults.base,./env/.env.defaults.local \
+  --path=./env/.env.base,./env/.env.development \
+  ./myshellscript.sh
+```
+
+You can also print the merged dotenv configuration (without full `process.env`) instead of executing a command:
+
+```bash
+dee --print
+dee --print=dotenv
+```
+
+- `--print` outputs JSON
+- `--print=dotenv` outputs `KEY=value` lines
 
 The following are the flags you can pass to the `dotenv-extended` cli with their default values. these options detailed later in this document:
 
@@ -169,10 +193,13 @@ require('dotenv-extended').load({
     path: '.env',
     defaults: '.env.defaults',
     schema: '.env.schema',
+    schemaExtends: undefined, // string | string[]
     errorOnMissing: false,
     errorOnExtra: false,
     errorOnRegex: false,
+    errorOnMissingFiles: false,
     includeProcessEnv: false,
+    returnSchemaOnly: false,
     assignToProcessEnv: true,
     overrideProcessEnv: false,
 });
@@ -188,13 +215,18 @@ DOTENV_CONFIG_SILENT=true
 DOTENV_CONFIG_PATH=.env
 DOTENV_CONFIG_DEFAULTS=.env.defaults
 DOTENV_CONFIG_SCHEMA=.env.schema
+DOTENV_CONFIG_SCHEMA_EXTENDS=
 DOTENV_CONFIG_ERROR_ON_MISSING=false
 DOTENV_CONFIG_ERROR_ON_EXTRA=false
 DOTENV_CONFIG_ERROR_ON_REGEX=false
+DOTENV_CONFIG_ERROR_ON_MISSING_FILES=false
 DOTENV_CONFIG_INCLUDE_PROCESS_ENV=false
+DOTENV_CONFIG_RETURN_SCHEMA_ONLY=false
 DOTENV_CONFIG_ASSIGN_TO_PROCESS_ENV=true
 DOTENV_CONFIG_OVERRIDE_PROCESS_ENV=false
 ```
+
+`DOTENV_CONFIG_PATH`, `DOTENV_CONFIG_DEFAULTS`, and `DOTENV_CONFIG_SCHEMA_EXTENDS` can each be set to comma-separated file paths for layered loading.
 
 The `load()` function always returns an object containing the variables loaded from the `.env` and `.env.defaults` files. By default the returned object does not contain the properties held in `process.env` but rather only the ones that are loaded from the `.env` and `.env.defaults` files.
 
@@ -214,13 +246,40 @@ Sets whether a log message is shown when missing the `.env` or `.env.defaults` f
 
 The main `.env` file that contains your variables.
 
+- Accepts `string` or `string[]` in code.
+- Accepts comma-separated paths via environment variable:
+    - `DOTENV_CONFIG_PATH=./.env.base,./.env.dev`
+- Merge order is deterministic:
+    - load each `path` entry in order
+    - later entries override earlier keys
+
 ### defaults (_default: .env.defaults_)
 
 The file that default values are loaded from.
 
+- Accepts `string` or `string[]` in code.
+- Accepts comma-separated paths via environment variable:
+    - `DOTENV_CONFIG_DEFAULTS=./.env.defaults.base,./.env.defaults.shared`
+- Merge order is deterministic:
+    - load each `defaults` entry in order
+    - later entries override earlier keys
+    - `path` layers are applied after all `defaults` layers, so `path` still overrides `defaults`
+
 ### schema (_default: .env.schema_)
 
 The file that contains the schema of what values should be available from combining `.env` and `.env.defaults`
+
+### schemaExtends (_default: undefined_)
+
+Optional schema extension file(s) layered on top of `schema`.
+
+- Accepts `string` or `string[]` in code.
+- Accepts comma-separated paths via environment variable:
+    - `DOTENV_CONFIG_SCHEMA_EXTENDS=./.env.production.schema,./.env.region.schema`
+- Merge order is deterministic:
+    - load base `schema` first
+    - then apply `schemaExtends` in order
+    - later layers override earlier keys
 
 ### errorOnMissing (_default: false_)
 
@@ -234,17 +293,50 @@ Causes the library to throw a `EXTRA CONFIG VALUES` error listing all of the ext
 
 Causes the library to throw a `REGEX MISMATCH` error listing all of the invalid variables from the combined `.env` and `.env.defaults` files. Also a `SyntaxError` is thrown in case `.env.schema` contains a syntactically invalid regex.
 
+### errorOnMissingFiles (_default: false_)
+
+Causes the library to throw a `MISSING CONFIG FILE` error when configured dotenv files cannot be found. This applies to `path`, `defaults`, and `schema` when they are loaded.
+
 ### includeProcessEnv (_default: false_)
 
 Causes the library add process.env variables to error checking. The variables in process.env overrides the variables in .env and .env.defaults while checking
 
+### returnSchemaOnly (_default: false_)
+
+Causes the returned object to include only variables present in `.env.schema`. This is useful when using `includeProcessEnv` for validation but you only want schema-defined keys in the final result.
+
 ### assignToProcessEnv (_default: true_)
 
-Sets whether the loaded values are assigned to the `process.env` object. If this is set, you must capture the return value of the call to `.load()` or you will not be able to use your variables.
+Sets whether the loaded values are assigned to the `process.env` object. If this is `false`, values are only available in the returned object from `.load()`.
 
 ### overrideProcessEnv (_default: false_)
 
 By defaut, `dotenv-entended` will not overwrite any varibles that are already set in the `process.env` object. If you would like to enable overwriting any already existing values, set this value to `true`.
+
+### Layered File Precedence
+
+When using multiple files, merge precedence is:
+
+1. `defaults` layers in order (last wins)
+2. `path` layers in order (last wins)
+3. `process.env` values, if `includeProcessEnv` is true and `overrideProcessEnv` is false
+
+Example:
+
+```javascript
+const config = require('dotenv-extended').load({
+    defaults: ['./env/.env.defaults.base', './env/.env.defaults.region'],
+    path: ['./env/.env.base', './env/.env.production'],
+});
+```
+
+Equivalent via environment variables:
+
+```bash
+DOTENV_CONFIG_DEFAULTS=./env/.env.defaults.base,./env/.env.defaults.region \
+DOTENV_CONFIG_PATH=./env/.env.base,./env/.env.production \
+node app.js
+```
 
 ## Examples
 

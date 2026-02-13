@@ -27,17 +27,19 @@ export interface IDotenvExtendedOptions {
 
     /**
      * Path to the main .env file that contains your variables.
+     * Can be a string path or layered string[] where later entries override earlier ones.
      *
      * @default '.env'
      */
-    path?: string;
+    path?: string | string[];
 
     /**
      * The path to the file that default values are loaded from.
+     * Can be a string path or layered string[] where later entries override earlier ones.
      *
      * @default '.env.defaults'
      */
-    defaults?: string;
+    defaults?: string | string[];
 
     /**
      * The path to the file that contains the schema of what values should be available
@@ -46,6 +48,12 @@ export interface IDotenvExtendedOptions {
      * @default '.env.schema'
      */
     schema?: string;
+
+    /**
+     * Optional schema extension path(s). These are layered on top of `schema` in order.
+     * Later entries override earlier keys (including base schema keys).
+     */
+    schemaExtends?: string | string[];
 
     /**
      * Causes the library to throw a MISSING CONFIG VALUES error listing all of the variables
@@ -72,6 +80,14 @@ export interface IDotenvExtendedOptions {
     errorOnRegex?: boolean;
 
     /**
+     * Causes the library to throw when a configured dotenv file path cannot be found.
+     * Applies to `path`, `defaults`, and `schema` when they are loaded.
+     *
+     * @default false
+     */
+    errorOnMissingFiles?: boolean;
+
+    /**
      * Causes the library add process.env variables to error checking. The variables in process.env overrides the
      * variables in .env and .env.defaults while checking
      *
@@ -80,9 +96,16 @@ export interface IDotenvExtendedOptions {
     includeProcessEnv?: boolean;
 
     /**
+     * Causes the returned object (and any process assignment) to include only variables present in the schema file.
+     * This is useful when `includeProcessEnv` is enabled for validation, but you only want schema-defined keys.
+     *
+     * @default false
+     */
+    returnSchemaOnly?: boolean;
+
+    /**
      * Sets whether the loaded values are assigned to the process.env object.
-     * If this is set, you must capture the return value of the call to .load() or you will not be
-     * able to use your variables.
+     * If this is false, values are only available from the returned object.
      *
      * @default true
      */

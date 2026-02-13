@@ -5,6 +5,7 @@ import parsePrimitive from './parse-primitive';
 import normalizeOptionKey from './normalize-option-key';
 
 const dotEnvFlagRegex = /^--(.+)=(.+)/;
+const dotEnvBooleanFlagRegex = /^--(.+)$/;
 
 /**
  * First parses config variables for dotenv-extended then selects the next item as the command and everything after that
@@ -21,6 +22,12 @@ export const parseCommand = (args) => {
         const match = dotEnvFlagRegex.exec(args[i]);
         if (match) {
             config[normalizeOptionKey(match[1])] = parsePrimitive(match[2]);
+            continue;
+        }
+
+        const booleanFlagMatch = dotEnvBooleanFlagRegex.exec(args[i]);
+        if (booleanFlagMatch && normalizeOptionKey(booleanFlagMatch[1]) === 'print') {
+            config.print = true;
         } else {
             // No more env setters, the rest of the line must be the command and args
             command = args[i];

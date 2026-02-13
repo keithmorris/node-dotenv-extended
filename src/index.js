@@ -5,6 +5,36 @@ import dotenv from 'dotenv';
 import getConfigFromEnv from './utils/config-from-env';
 import loadEnvironmentFile from './utils/load-environment-file';
 
+const normalizeLayeredFiles = (value) => {
+    if (!value) {
+        return [];
+    }
+
+    if (Array.isArray(value)) {
+        return value.filter(Boolean);
+    }
+
+    if (typeof value === 'string') {
+        return value
+            .split(',')
+            .map((item) => item.trim())
+            .filter(Boolean);
+    }
+
+    return [];
+};
+
+const loadLayeredFiles = (files, options) =>
+    normalizeLayeredFiles(files).reduce((acc, filePath) => {
+        const fileData = loadEnvironmentFile(
+            filePath,
+            options.encoding,
+            options.silent,
+            options.errorOnMissingFiles
+        );
+        return Object.assign(acc, fileData);
+    }, {});
+
 export const parse = dotenv.parse.bind(dotenv);
 export const config = (options) => {
     let defaultsData,
@@ -15,9 +45,12 @@ export const config = (options) => {
             path: '.env',
             defaults: '.env.defaults',
             schema: '.env.schema',
+            schemaExtends: undefined,
             errorOnMissing: false,
             errorOnExtra: false,
             errorOnRegex: false,
+            errorOnMissingFiles: false,
+            returnSchemaOnly: false,
             includeProcessEnv: false,
             assignToProcessEnv: true,
             overrideProcessEnv: false,
@@ -26,8 +59,8 @@ export const config = (options) => {
 
     options = Object.assign({}, defaultOptions, processEnvOptions, options);
 
-    defaultsData = loadEnvironmentFile(options.defaults, options.encoding, options.silent);
-    environmentData = loadEnvironmentFile(options.path, options.encoding, options.silent);
+    defaultsData = loadLayeredFiles(options.defaults, options);
+    environmentData = loadLayeredFiles(options.path, options);
 
     let configData = Object.assign({}, defaultsData, environmentData);
     const config = options.includeProcessEnv
@@ -36,9 +69,33 @@ export const config = (options) => {
     const configOnlyKeys = Object.keys(configData);
     const configKeys = Object.keys(config);
 
-    if (options.errorOnMissing || options.errorOnExtra || options.errorOnRegex) {
-        const schema = loadEnvironmentFile(options.schema, options.encoding, options.silent);
-        const schemaKeys = Object.keys(schema);
+    let schemaKeys = null;
+
+    if (
+        options.errorOnMissing ||
+        options.errorOnExtra ||
+        options.errorOnRegex ||
+        options.returnSchemaOnly
+    ) {
+        const baseSchema = loadEnvironmentFile(
+            options.schema,
+            options.encoding,
+            options.silent,
+            options.errorOnMissingFiles
+        );
+        const schema = normalizeLayeredFiles(options.schemaExtends).reduce(
+            (acc, schemaPath) => {
+                const schemaLayer = loadEnvironmentFile(
+                    schemaPath,
+                    options.encoding,
+                    options.silent,
+                    options.errorOnMissingFiles
+                );
+                return Object.assign(acc, schemaLayer);
+            },
+            Object.assign({}, baseSchema)
+        );
+        schemaKeys = Object.keys(schema);
 
         let missingKeys = schemaKeys.filter(function (key) {
             return configKeys.indexOf(key) < 0;
@@ -75,6 +132,15 @@ export const config = (options) => {
             if (typeof process.env[configKeys[i]] !== 'undefined')
                 configData[configKeys[i]] = process.env[configKeys[i]];
         }
+    }
+
+    if (options.returnSchemaOnly && schemaKeys) {
+        configData = schemaKeys.reduce((acc, key) => {
+            if (typeof config[key] !== 'undefined') {
+                acc[key] = config[key];
+            }
+            return acc;
+        }, {});
     }
 
     if (options.assignToProcessEnv) {
