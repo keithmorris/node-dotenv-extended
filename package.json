@@ -5,7 +5,7 @@
     "repository": "git@github.com:keithmorris/node-dotenv-extended.git",
     "main": "lib/index.js",
     "types": "dotenv-extended.d.ts",
-    "bin": "lib/bin/index.js",
+    "bin": "lib/bin/cli.js",
     "exports": {
         ".": {
             "require": "./lib/index.js",
@@ -25,9 +25,11 @@
         "node": ">=20"
     },
     "scripts": {
-        "build": "tsup src/index.js src/config.js src/bin/index.js --format cjs --target node20 --out-dir lib --clean",
-        "test": "vitest run",
+        "build": "tsup src/index.js src/config.js src/bin/index.js src/bin/cli.js --format cjs --target node20 --out-dir lib --clean",
+        "test": "vitest run --coverage",
+        "test:unit": "vitest run",
         "test:watch": "vitest",
+        "test:coverage": "vitest run --coverage",
         "lint": "eslint .",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
@@ -42,6 +44,7 @@
     "license": "MIT",
     "devDependencies": {
         "@eslint/js": "^9.35.0",
+        "@vitest/coverage-v8": "^3.2.4",
         "eslint": "^9.35.0",
         "globals": "^16.3.0",
         "prettier": "^3.6.2",

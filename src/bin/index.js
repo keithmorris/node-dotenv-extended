@@ -10,24 +10,30 @@ import { config } from '..';
 import parseCommand from '../utils/parse-command';
 import { spawn } from 'node:child_process';
 
-function loadAndExecute(args) {
+export const spawnCommand = (command, commandArgs, options) => spawn(command, commandArgs, options);
+
+export function loadAndExecute(args, dependencies = {}) {
+    const {
+        spawnCommandFn = spawnCommand,
+        processOn = process.on.bind(process),
+        processExit = process.exit,
+    } = dependencies;
+
     const [dotEnvConfig, command, commandArgs] = parseCommand(args);
     if (command) {
         config(dotEnvConfig); // mutates process.env
-        const proc = spawn(command, commandArgs, {
+        const proc = spawnCommandFn(command, commandArgs, {
             stdio: 'inherit',
             shell: true,
             env: process.env,
         });
 
-        process.on('SIGTERM', () => proc.kill('SIGTERM'));
-        process.on('SIGINT', () => proc.kill('SIGINT'));
-        process.on('SIGBREAK', () => proc.kill('SIGBREAK'));
-        process.on('SIGHUP', () => proc.kill('SIGHUP'));
-        proc.on('exit', process.exit);
+        processOn('SIGTERM', () => proc.kill('SIGTERM'));
+        processOn('SIGINT', () => proc.kill('SIGINT'));
+        processOn('SIGBREAK', () => proc.kill('SIGBREAK'));
+        processOn('SIGHUP', () => proc.kill('SIGHUP'));
+        proc.on('exit', processExit);
 
         return proc;
     }
 }
-
-loadAndExecute(process.argv.slice(2));

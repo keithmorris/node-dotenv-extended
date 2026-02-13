@@ -3,8 +3,11 @@ import { fileURLToPath } from 'node:url';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import dotenvex from '../src/index';
+import * as cli from '../src/bin/index';
 import getConfigFromEnv from '../src/utils/config-from-env';
+import normalizeOptionKey from '../src/utils/normalize-option-key';
 import parseCommand from '../src/utils/parse-command';
+import parsePrimitive from '../src/utils/parse-primitive';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -285,5 +288,89 @@ describe('supporting parser utilities', () => {
     it('parse export is available and parses dotenv content', () => {
         const parsed = dotenvex.parse('A=1\nB=test\n');
         expect(parsed).toEqual({ A: '1', B: 'test' });
+    });
+
+    it('parsePrimitive handles supported scalar conversions', () => {
+        expect(parsePrimitive(undefined)).toBeUndefined();
+        expect(parsePrimitive(null)).toBeNull();
+        expect(parsePrimitive(7)).toBe(7);
+        expect(parsePrimitive(true)).toBe(true);
+        expect(parsePrimitive('')).toBeUndefined();
+        expect(parsePrimitive('undefined')).toBeUndefined();
+        expect(parsePrimitive("'null'")).toBeNull();
+        expect(parsePrimitive('NaN')).toSatisfy(Number.isNaN);
+        expect(parsePrimitive('TRUE')).toBe(true);
+        expect(parsePrimitive('0')).toBe(false);
+        expect(parsePrimitive('12.5')).toBe(12.5);
+        expect(parsePrimitive('some-string')).toBe('some-string');
+        const obj = { x: 1 };
+        expect(parsePrimitive(obj)).toBe(obj);
+    });
+
+    it('normalizeOptionKey handles snake, kebab, uppercase, camel, and empty inputs', () => {
+        expect(normalizeOptionKey('ERROR_ON_REGEX')).toBe('errorOnRegex');
+        expect(normalizeOptionKey('error-on-regex')).toBe('errorOnRegex');
+        expect(normalizeOptionKey('INCLUDE_PROCESS_ENV')).toBe('includeProcessEnv');
+        expect(normalizeOptionKey('ASSIGNTOPROCESSENV')).toBe('assigntoprocessenv');
+        expect(normalizeOptionKey('assignToProcessEnv')).toBe('assignToProcessEnv');
+        expect(normalizeOptionKey('')).toBe('');
+    });
+});
+
+describe('CLI execution behavior', () => {
+    beforeEach(() => {
+        resetEnvKeys();
+        vi.restoreAllMocks();
+    });
+
+    it('spawns command with inherited stdio and process env', () => {
+        const kill = vi.fn();
+        const on = vi.fn();
+        const spawnCommandFn = vi.fn().mockReturnValue({ kill, on });
+        const processOn = vi.fn();
+        const processExit = vi.fn();
+
+        process.env.DOTENV_CONFIG_PATH = fixture('.env.override');
+        const proc = cli.loadAndExecute(['echo', 'hello'], {
+            spawnCommandFn,
+            processOn,
+            processExit,
+        });
+
+        expect(proc).toBeTruthy();
+        expect(spawnCommandFn).toHaveBeenCalledWith('echo', ['hello'], {
+            stdio: 'inherit',
+            shell: true,
+            env: process.env,
+        });
+        expect(process.env.TEST_ONE).toBe('one overridden');
+        expect(processOn).toHaveBeenCalledTimes(4);
+        expect(on).toHaveBeenCalledWith('exit', processExit);
+    });
+
+    it('returns undefined when no command is provided', () => {
+        const spawnCommandFn = vi.fn();
+        const result = cli.loadAndExecute(['--path=test/.env'], { spawnCommandFn });
+        expect(result).toBeUndefined();
+        expect(spawnCommandFn).not.toHaveBeenCalled();
+    });
+
+    it('spawnCommand launches a child process', async () => {
+        const proc = cli.spawnCommand(process.execPath, ['-e', 'process.exit(0)'], {
+            stdio: 'ignore',
+            shell: false,
+            env: process.env,
+        });
+
+        await new Promise((resolve, reject) => {
+            proc.on('exit', (code) => {
+                if (code === 0) {
+                    resolve();
+                    return;
+                }
+                reject(new Error(`Unexpected exit code: ${code}`));
+            });
+            proc.on('error', reject);
+        });
     });
 });

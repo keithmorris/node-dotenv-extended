@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.0.0 - Unreleased
+
+- Modernize build/test/lint tooling:
+    - Replace `gulp` + Babel + `esm` with `tsup`, `vitest`, modern ESLint, and Prettier
+- Increase supported Node baseline to `>=20`
+- Add `exports` and explicit publish `files` map
+- Remove unnecessary runtime dependencies:
+    - `auto-parse`
+    - `camelcase`
+    - `cross-spawn`
+- Keep public API compatibility for `load`, `config`, `parse`, preload config entry, and CLI usage
+- Expand and modernize test coverage, including CLI execution behavior
+
 ## 2.9.0 - 2020.09.30
 
 - Missing values in schema now default to empty strings for `errorOnRegex` (thanks @FokkeZB)

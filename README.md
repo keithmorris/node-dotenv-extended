@@ -1,8 +1,12 @@
 # dotenv-extended
 
-[![Build Status](https://travis-ci.org/keithmorris/node-dotenv-extended.svg?branch=develop)](https://travis-ci.org/keithmorris/node-dotenv-extended)
-[![Coverage Status](https://coveralls.io/repos/github/keithmorris/node-dotenv-extended/badge.svg?branch=develop)](https://coveralls.io/github/keithmorris/node-dotenv-extended?branch=develop)
-[![Dependency Status](https://david-dm.org/keithmorris/node-dotenv-extended.svg)](https://david-dm.org/keithmorris/node-dotenv-extended)
+Extended `.env` loading with defaults and schema validation.
+
+## Supported Node Versions
+
+- Node `20.x`
+- Node `22.x`
+- Node `24.x`
 
 I've been a big fan of the [dotenv] for a quite some time (in fact, this library uses [dotenv] under the hood for the `.env` file parsing). However, while working on some bigger projects, we realized that the managing of the `.env` files became a bit of a chore. As the files changed in the development environments, it became a tedious manual process to compare and figure out what needed to be added or removed in the other environments.
 
@@ -46,6 +50,18 @@ I have tried to stay as compatible as possible with the [dotenv] library but the
 ```bash
 npm i --save dotenv-extended
 ```
+
+## Development
+
+```bash
+npm run build
+npm run lint
+npm run format
+npm test
+npm run check
+```
+
+`npm run check` runs linting, formatting checks, and tests.
 
 ## Usage
 
@@ -95,6 +111,8 @@ Or to specify load options:
 ```bash
 node -r dotenv-extended/config your_script.js dotenv_config_path=./env/.env dotenv_config_defaults=./env/.env.defaults
 ```
+
+`dotenv_config_*` values are normalized to the same option names as `load()`, supporting both snake_case and kebab-case style keys.
 
 ### Load Environment Variables and pass to non-NodeJS script
 
@@ -294,6 +312,18 @@ const myConfig = require('dotenv-extended').load({
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## Migration Notes
+
+### Migrating from legacy 2.x tooling
+
+- Node `>=20` is now required.
+- Build/test tooling no longer uses `gulp`, Babel, `esm`, or Mocha/NYC.
+- The project now uses:
+    - `tsup` for build output in `lib/`
+    - `vitest` for tests
+    - modern `eslint` config and `prettier`
+- Public API is kept compatible (`load`, `config`, `parse`, CLI behavior, and `dotenv-extended/config` preload entry).
 
 ## Change Log
 
