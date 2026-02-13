@@ -54,14 +54,20 @@ npm i --save dotenv-extended
 ## Development
 
 ```bash
-npm run build
-npm run lint
-npm run format
-npm test
 npm run check
 ```
 
 `npm run check` runs linting, formatting checks, and tests.
+
+Use individual commands only when needed:
+
+```bash
+npm run build
+npm run lint
+npm run format
+npm run test:unit
+npm test
+```
 
 ## Usage
 
