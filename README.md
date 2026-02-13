@@ -142,6 +142,16 @@ Configure `dotenv-extended` by passing any of the dotenv-extended options before
 dotenv-extended --path=/path/to/.env --defaults=/path/to/.env.defaults --errorOnMissing=true ./myshellscript.sh --whatever-flags-my-script-takes
 ```
 
+You can also print the merged dotenv configuration (without full `process.env`) instead of executing a command:
+
+```bash
+dotenv-extended --print
+dotenv-extended --print=dotenv
+```
+
+- `--print` outputs JSON
+- `--print=dotenv` outputs `KEY=value` lines
+
 The following are the flags you can pass to the `dotenv-extended` cli with their default values. these options detailed later in this document:
 
 ```bash

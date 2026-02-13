@@ -255,6 +255,20 @@ describe('supporting parser utilities', () => {
         expect(parsed[2]).toEqual(['--jump', '--dive=true', 'I was here']);
     });
 
+    it('parseCommand supports standalone --print flag', () => {
+        const parsed = parseCommand(['--print']);
+        expect(parsed[0]).toEqual({ print: true });
+        expect(parsed[1]).toBeNull();
+        expect(parsed[2]).toEqual([]);
+    });
+
+    it('parseCommand supports --print=<format> option', () => {
+        const parsed = parseCommand(['--print=dotenv']);
+        expect(parsed[0]).toEqual({ print: 'dotenv' });
+        expect(parsed[1]).toBeNull();
+        expect(parsed[2]).toEqual([]);
+    });
+
     it('getConfigFromEnv parses environment option values', () => {
         process.env.DOTENV_CONFIG_ENCODING = 'utf8';
         process.env.DOTENV_CONFIG_SILENT = 'true';
@@ -327,7 +341,10 @@ describe('CLI execution behavior', () => {
         const kill = vi.fn();
         const on = vi.fn();
         const spawnCommandFn = vi.fn().mockReturnValue({ kill, on });
-        const processOn = vi.fn();
+        const signalHandlers = {};
+        const processOn = vi.fn((signal, handler) => {
+            signalHandlers[signal] = handler;
+        });
         const processExit = vi.fn();
 
         process.env.DOTENV_CONFIG_PATH = fixture('.env.override');
@@ -346,6 +363,15 @@ describe('CLI execution behavior', () => {
         expect(process.env.TEST_ONE).toBe('one overridden');
         expect(processOn).toHaveBeenCalledTimes(4);
         expect(on).toHaveBeenCalledWith('exit', processExit);
+
+        signalHandlers.SIGTERM();
+        signalHandlers.SIGINT();
+        signalHandlers.SIGBREAK();
+        signalHandlers.SIGHUP();
+        expect(kill).toHaveBeenCalledWith('SIGTERM');
+        expect(kill).toHaveBeenCalledWith('SIGINT');
+        expect(kill).toHaveBeenCalledWith('SIGBREAK');
+        expect(kill).toHaveBeenCalledWith('SIGHUP');
     });
 
     it('returns undefined when no command is provided', () => {
@@ -353,6 +379,69 @@ describe('CLI execution behavior', () => {
         const result = cli.loadAndExecute(['--path=test/.env'], { spawnCommandFn });
         expect(result).toBeUndefined();
         expect(spawnCommandFn).not.toHaveBeenCalled();
+    });
+
+    it('prints merged config as JSON when --print is set', () => {
+        const spawnCommandFn = vi.fn();
+        const processExit = vi.fn();
+        const writeStdoutFn = vi.fn();
+        const result = cli.loadAndExecute(
+            [
+                '--print',
+                `--path=${fixture('.env.override')}`,
+                `--defaults=${fixture('.env.defaults.example')}`,
+            ],
+            { spawnCommandFn, processExit, writeStdoutFn }
+        );
+
+        expect(spawnCommandFn).not.toHaveBeenCalled();
+        expect(processExit).not.toHaveBeenCalled();
+        expect(result).toMatchObject({
+            TEST_ONE: 'one overridden',
+            TEST_TWO: 'two',
+            TEST_THREE: 'three',
+        });
+        expect(writeStdoutFn).toHaveBeenCalledTimes(1);
+        expect(writeStdoutFn.mock.calls[0][0]).toContain('"TEST_ONE": "one overridden"');
+    });
+
+    it('prints merged config in dotenv format when --print=dotenv is set', () => {
+        const writeStdoutFn = vi.fn();
+        const result = cli.loadAndExecute(
+            [
+                '--print=dotenv',
+                `--path=${fixture('.env.override')}`,
+                `--defaults=${fixture('.env.defaults.example')}`,
+            ],
+            { writeStdoutFn }
+        );
+
+        expect(result).toMatchObject({
+            TEST_ONE: 'one overridden',
+            TEST_TWO: 'two',
+            TEST_THREE: 'three',
+        });
+        expect(writeStdoutFn).toHaveBeenCalledTimes(1);
+        const output = writeStdoutFn.mock.calls[0][0];
+        expect(output).toContain('TEST_ONE=one overridden');
+        expect(output).toContain('TEST_TWO=two');
+        expect(output).toContain('TEST_THREE=three');
+    });
+
+    it('errors when --print is combined with command execution', () => {
+        const writeStderrFn = vi.fn();
+        const processExit = vi.fn();
+        const spawnCommandFn = vi.fn();
+        const result = cli.loadAndExecute(['--print', 'echo', 'hello'], {
+            writeStderrFn,
+            processExit,
+            spawnCommandFn,
+        });
+
+        expect(result).toBeUndefined();
+        expect(spawnCommandFn).not.toHaveBeenCalled();
+        expect(processExit).toHaveBeenCalledWith(1);
+        expect(writeStderrFn).toHaveBeenCalledTimes(1);
     });
 
     it('spawnCommand launches a child process', async () => {
@@ -372,5 +461,16 @@ describe('CLI execution behavior', () => {
             });
             proc.on('error', reject);
         });
+    });
+
+    it('writeStdout and writeStderr pass through to process streams', () => {
+        const stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
+        const stderrSpy = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+
+        cli.writeStdout('stdout\n');
+        cli.writeStderr('stderr\n');
+
+        expect(stdoutSpy).toHaveBeenCalledWith('stdout\n');
+        expect(stderrSpy).toHaveBeenCalledWith('stderr\n');
     });
 });
