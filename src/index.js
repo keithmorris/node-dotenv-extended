@@ -5,6 +5,25 @@ import dotenv from 'dotenv';
 import getConfigFromEnv from './utils/config-from-env';
 import loadEnvironmentFile from './utils/load-environment-file';
 
+const normalizeSchemaExtends = (value) => {
+    if (!value) {
+        return [];
+    }
+
+    if (Array.isArray(value)) {
+        return value.filter(Boolean);
+    }
+
+    if (typeof value === 'string') {
+        return value
+            .split(',')
+            .map((item) => item.trim())
+            .filter(Boolean);
+    }
+
+    return [];
+};
+
 export const parse = dotenv.parse.bind(dotenv);
 export const config = (options) => {
     let defaultsData,
@@ -15,6 +34,7 @@ export const config = (options) => {
             path: '.env',
             defaults: '.env.defaults',
             schema: '.env.schema',
+            schemaExtends: undefined,
             errorOnMissing: false,
             errorOnExtra: false,
             errorOnRegex: false,
@@ -56,11 +76,23 @@ export const config = (options) => {
         options.errorOnRegex ||
         options.returnSchemaOnly
     ) {
-        const schema = loadEnvironmentFile(
+        const baseSchema = loadEnvironmentFile(
             options.schema,
             options.encoding,
             options.silent,
             options.errorOnMissingFiles
+        );
+        const schema = normalizeSchemaExtends(options.schemaExtends).reduce(
+            (acc, schemaPath) => {
+                const schemaLayer = loadEnvironmentFile(
+                    schemaPath,
+                    options.encoding,
+                    options.silent,
+                    options.errorOnMissingFiles
+                );
+                return Object.assign(acc, schemaLayer);
+            },
+            Object.assign({}, baseSchema)
         );
         schemaKeys = Object.keys(schema);
 

@@ -48,6 +48,12 @@ export interface IDotenvExtendedOptions {
     schema?: string;
 
     /**
+     * Optional schema extension path(s). These are layered on top of `schema` in order.
+     * Later entries override earlier keys (including base schema keys).
+     */
+    schemaExtends?: string | string[];
+
+    /**
      * Causes the library to throw a MISSING CONFIG VALUES error listing all of the variables
      * missing the combined .env and .env.defaults files.
      *

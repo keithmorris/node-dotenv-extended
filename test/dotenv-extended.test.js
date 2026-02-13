@@ -28,6 +28,7 @@ const resetEnvKeys = () => {
     delete process.env.DOTENV_CONFIG_ERROR_ON_REGEX;
     delete process.env.DOTENV_CONFIG_ERROR_ON_MISSING_FILES;
     delete process.env.DOTENV_CONFIG_INCLUDE_PROCESS_ENV;
+    delete process.env.DOTENV_CONFIG_SCHEMA_EXTENDS;
     delete process.env.DOTENV_CONFIG_RETURN_SCHEMA_ONLY;
     delete process.env.DOTENV_CONFIG_INCLUDED_PROCESS_ENV;
     delete process.env.DOTENV_CONFIG_ASSIGN_TO_PROCESS_ENV;
@@ -263,6 +264,75 @@ describe('dotenv-extended public API', () => {
 
         const config = dotenvex.load({ assignToProcessEnv: false });
         expect(config).toEqual({
+            TEST_ONE: 'one overridden',
+            TEST_TWO: 'two',
+            TEST_THREE: 'three',
+        });
+    });
+
+    it('supports schemaExtends as a single path', () => {
+        const runTest = () =>
+            dotenvex.load({
+                schema: fixture('.env.schema.example'),
+                schemaExtends: fixture('.env.schema.extend-four'),
+                path: fixture('.env.extra'),
+                errorOnExtra: true,
+                assignToProcessEnv: false,
+            });
+
+        expect(runTest).not.toThrow();
+        expect(runTest()).toMatchObject({
+            TEST_ONE: 'one',
+            TEST_TWO: 'two',
+            TEST_THREE: 'three',
+            TEST_FOUR: 'four',
+        });
+    });
+
+    it('supports schemaExtends as layered array with last wins', () => {
+        const runTest = () =>
+            dotenvex.load({
+                schema: fixture('.env.schema.regex'),
+                schemaExtends: [
+                    fixture('.env.schema.extend-regex-strict'),
+                    fixture('.env.schema.extend-regex-pass'),
+                ],
+                path: fixture('.env.override'),
+                errorOnRegex: true,
+                assignToProcessEnv: false,
+            });
+
+        expect(runTest).not.toThrow();
+    });
+
+    it('supports DOTENV_CONFIG_SCHEMA_EXTENDS from environment', () => {
+        process.env.DOTENV_CONFIG_SCHEMA = fixture('.env.schema.example');
+        process.env.DOTENV_CONFIG_SCHEMA_EXTENDS = fixture('.env.schema.extend-four');
+        process.env.DOTENV_CONFIG_PATH = fixture('.env.extra');
+        process.env.DOTENV_CONFIG_ERROR_ON_EXTRA = 'true';
+
+        const runTest = () => dotenvex.load({ assignToProcessEnv: false });
+        expect(runTest).not.toThrow();
+        expect(runTest()).toMatchObject({
+            TEST_ONE: 'one',
+            TEST_TWO: 'two',
+            TEST_THREE: 'three',
+            TEST_FOUR: 'four',
+        });
+    });
+
+    it('ignores unsupported schemaExtends value types', () => {
+        const runTest = () =>
+            dotenvex.load({
+                schema: fixture('.env.schema.example'),
+                schemaExtends: 123,
+                path: fixture('.env.override'),
+                errorOnRegex: true,
+                assignToProcessEnv: false,
+            });
+
+        expect(runTest).not.toThrow();
+        expect(runTest()).toEqual({
             TEST_ONE: 'one overridden',
             TEST_TWO: 'two',
             TEST_THREE: 'three',

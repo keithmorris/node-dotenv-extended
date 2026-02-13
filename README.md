@@ -184,6 +184,7 @@ require('dotenv-extended').load({
     path: '.env',
     defaults: '.env.defaults',
     schema: '.env.schema',
+    schemaExtends: undefined, // string | string[]
     errorOnMissing: false,
     errorOnExtra: false,
     errorOnRegex: false,
@@ -205,6 +206,7 @@ DOTENV_CONFIG_SILENT=true
 DOTENV_CONFIG_PATH=.env
 DOTENV_CONFIG_DEFAULTS=.env.defaults
 DOTENV_CONFIG_SCHEMA=.env.schema
+DOTENV_CONFIG_SCHEMA_EXTENDS=
 DOTENV_CONFIG_ERROR_ON_MISSING=false
 DOTENV_CONFIG_ERROR_ON_EXTRA=false
 DOTENV_CONFIG_ERROR_ON_REGEX=false
@@ -240,6 +242,18 @@ The file that default values are loaded from.
 ### schema (_default: .env.schema_)
 
 The file that contains the schema of what values should be available from combining `.env` and `.env.defaults`
+
+### schemaExtends (_default: undefined_)
+
+Optional schema extension file(s) layered on top of `schema`.
+
+- Accepts `string` or `string[]` in code.
+- Accepts comma-separated paths via environment variable:
+    - `DOTENV_CONFIG_SCHEMA_EXTENDS=./.env.production.schema,./.env.region.schema`
+- Merge order is deterministic:
+    - load base `schema` first
+    - then apply `schemaExtends` in order
+    - later layers override earlier keys
 
 ### errorOnMissing (_default: false_)
 
