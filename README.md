@@ -1,9 +1,12 @@
 # dotenv-extended
 
-[![Build Status](https://travis-ci.org/keithmorris/node-dotenv-extended.svg?branch=develop)](https://travis-ci.org/keithmorris/node-dotenv-extended)
-[![Coverage Status](https://coveralls.io/repos/github/keithmorris/node-dotenv-extended/badge.svg?branch=develop)](https://coveralls.io/github/keithmorris/node-dotenv-extended?branch=develop)
-[![Dependency Status](https://david-dm.org/keithmorris/node-dotenv-extended.svg)](https://david-dm.org/keithmorris/node-dotenv-extended)
+Extended `.env` loading with defaults and schema validation.
 
+## Supported Node Versions
+
+- Node `20.x`
+- Node `22.x`
+- Node `24.x`
 
 I've been a big fan of the [dotenv] for a quite some time (in fact, this library uses [dotenv] under the hood for the `.env` file parsing). However, while working on some bigger projects, we realized that the managing of the `.env` files became a bit of a chore. As the files changed in the development environments, it became a tedious manual process to compare and figure out what needed to be added or removed in the other environments.
 
@@ -29,7 +32,6 @@ Common configuration defaults across all environments (commited to source contro
 
 Defines a schema of what variables _should_ be defined in the combination of `.env` and `.env.defaults`. Optionally, you can have the library throw an error if all values are not configured or if there are extra values that shouldn't be there.
 
-
 The `.env.schema` file should only have the name of the variable and the `=` without any value:
 
 ```
@@ -49,6 +51,24 @@ I have tried to stay as compatible as possible with the [dotenv] library but the
 npm i --save dotenv-extended
 ```
 
+## Development
+
+```bash
+npm run check
+```
+
+`npm run check` runs linting, formatting checks, and tests.
+
+Use individual commands only when needed:
+
+```bash
+npm run build
+npm run lint
+npm run format
+npm run test:unit
+npm test
+```
+
 ## Usage
 
 As early as possible in your main script:
@@ -61,7 +81,7 @@ Or if you prefer import syntax:
 
 ```javascript
 import dotEnvExtended from 'dotenv-extended';
-dotEnvExtended.load(); 
+dotEnvExtended.load();
 ```
 
 Create a `.env` file in the root directory of your project. Add environment-specific variables on new lines in the form of `NAME=VALUE`.
@@ -80,7 +100,7 @@ MONGO_PASS=dbpassword!
 ```javascript
 mongoose.connect('mongodb://' + process.env.MONGO_HOST + '/' + process.env.MONGO_DATABASE, {
     user: process.env.MONGO_USER,
-    pass: process.env.MONGO_PASS
+    pass: process.env.MONGO_PASS,
 });
 ```
 
@@ -97,6 +117,8 @@ Or to specify load options:
 ```bash
 node -r dotenv-extended/config your_script.js dotenv_config_path=./env/.env dotenv_config_defaults=./env/.env.defaults
 ```
+
+`dotenv_config_*` values are normalized to the same option names as `load()`, supporting both snake_case and kebab-case style keys.
 
 ### Load Environment Variables and pass to non-NodeJS script
 
@@ -142,19 +164,20 @@ Defaults are shown below:
 
 ```javascript
 require('dotenv-extended').load({
-	encoding: 'utf8',
-	silent: true,
-	path: '.env',
-	defaults: '.env.defaults',
-	schema: '.env.schema',
-	errorOnMissing: false,
-	errorOnExtra: false,
-	errorOnRegex: false,
-	includeProcessEnv: false,
-	assignToProcessEnv: true,
-	overrideProcessEnv: false
+    encoding: 'utf8',
+    silent: true,
+    path: '.env',
+    defaults: '.env.defaults',
+    schema: '.env.schema',
+    errorOnMissing: false,
+    errorOnExtra: false,
+    errorOnRegex: false,
+    includeProcessEnv: false,
+    assignToProcessEnv: true,
+    overrideProcessEnv: false,
 });
 ```
+
 ### Configure via Environment Variables (New in 2.8.0)
 
 You may also set the configuration values via environment variables loaded from `process.env` shown below with defaults:
@@ -255,18 +278,18 @@ API_KEY=
 ```javascript
 const myConfig = require('dotenv-extended').load();
 
-myConfig.DB_HOST === process.env.DB_HOST === "localhost"
-myConfig.DB_USER === process.env.DB_USER === "databaseuser-local"
-myConfig.DB_PASS === process.env.DB_PASS === "localhost"
-myConfig.DB_DATABASE === process.env.DB_DATABASE === "MyAppDB"
-myConfig.SHARE_URL === process.env.SHARE_URL === "http://www.example.com"
+(myConfig.DB_HOST === process.env.DB_HOST) === 'localhost';
+(myConfig.DB_USER === process.env.DB_USER) === 'databaseuser-local';
+(myConfig.DB_PASS === process.env.DB_PASS) === 'localhost';
+(myConfig.DB_DATABASE === process.env.DB_DATABASE) === 'MyAppDB';
+(myConfig.SHARE_URL === process.env.SHARE_URL) === 'http://www.example.com';
 ```
 
 ### Load files with `errorOnMissing`
 
 ```javascript
 const myConfig = require('dotenv-extended').load({
-    errorOnMissing: true
+    errorOnMissing: true,
 });
 
 // Throws ERROR `MISSING CONFIG VALUES: API_KEY`
@@ -276,7 +299,7 @@ const myConfig = require('dotenv-extended').load({
 
 ```javascript
 const myConfig = require('dotenv-extended').load({
-    errorOnExtra: true
+    errorOnExtra: true,
 });
 
 // Throws ERROR `EXTRA CONFIG VALUES: SHARE_URL`
@@ -286,7 +309,7 @@ const myConfig = require('dotenv-extended').load({
 
 ```javascript
 const myConfig = require('dotenv-extended').load({
-    errorOnRegex: true
+    errorOnRegex: true,
 });
 
 // Throws ERROR `REGEX MISMATCH: DB_USER`
@@ -295,6 +318,18 @@ const myConfig = require('dotenv-extended').load({
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## Migration Notes
+
+### Migrating from legacy 2.x tooling
+
+- Node `>=20` is now required.
+- Build/test tooling no longer uses `gulp`, Babel, `esm`, or Mocha/NYC.
+- The project now uses:
+    - `tsup` for build output in `lib/`
+    - `vitest` for tests
+    - modern `eslint` config and `prettier`
+- Public API is kept compatible (`load`, `config`, `parse`, CLI behavior, and `dotenv-extended/config` preload entry).
 
 ## Change Log
 

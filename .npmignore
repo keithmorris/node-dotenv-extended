@@ -4,7 +4,7 @@ node_modules
 src
 test
 .editorconfig
-.eslintrc
+.prettierrc.json
+eslint.config.cjs
 .gitignore
 .travis.yml
-gulpfile.esm.js
