@@ -5,7 +5,10 @@
     "repository": "git@github.com:keithmorris/node-dotenv-extended.git",
     "main": "lib/index.js",
     "types": "dotenv-extended.d.ts",
-    "bin": "lib/bin/cli.js",
+    "bin": {
+        "dotenv-extended": "lib/bin/cli.js",
+        "dee": "lib/bin/cli.js"
+    },
     "exports": {
         ".": {
             "require": "./lib/index.js",
